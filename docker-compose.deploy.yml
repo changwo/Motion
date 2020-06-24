@@ -1,13 +1,7 @@
 version: '3'
 services:
   backend:
-    image: registry.gitlab.propulsion-home.ch/habib-kadiri/week-7/docker_motion:latest
-    ports:
-    - 8000:8000
-    volumes:
-    - ./backend:/backend
-    - media-files:/media
-    - static-files:/static
+    image: registry.gitlab.propulsion-home.ch/habib-kadiri/week-7/docker_motion:master
     depends_on:
       - db
     command: 'gunicorn --reload -w 4 -b 0.0.0.0:8000 project.wsgi:application'
@@ -20,13 +14,11 @@ services:
       - POSTGRES_DB=postgres
     volumes:
       - ./postgres_db:/var/lib/postgresql/data
-    ports:
-      - '5432:5432'
 
   nginx:
     image: nginx:latest
     ports:
-      - '8080:80'
+      - '80:80'
     volumes:
       - ./nginx:/etc/nginx/conf.d
       - static-files:/static
