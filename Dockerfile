@@ -8,6 +8,12 @@ ENV PATH /opt/conda/envs/motion_backend/bin:$PATH
 
 RUN echo "source activate motion_backend" >~/.bashrc
 
+RUN mkdir -p /scripts
+
+COPY ./scripts /scripts
+
+RUN chmod +x /scripts/*
+
 COPY ./backend /backend
 
 WORKDIR /backend

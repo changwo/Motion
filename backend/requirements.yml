@@ -3,6 +3,7 @@ dependencies:
   - python=3.6
   - psycopg2
   - pip:
+      - flake8
       - django==3.0.3
       - djangorestframework==3.11.0
       - djangorestframework-simplejwt==4.4.0
