@@ -1,7 +1,7 @@
 version: '3'
 services:
   backend:
-    image: registry.gitlab.propulsion-home.ch/habib-kadiri/week-7/docker_motion:master
+    image: registry.gitlab.propulsion-home.ch/habib-kadiri/week-7/docker_motion:latest
     volumes:
     - static-files:/static
     - media-files:/media
