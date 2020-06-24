@@ -8,6 +8,7 @@ services:
     - ./backend:/backend
     depends_on:
       - db
+    command: 'gunicorn --reload -w 4 -b 0.0.0.0:8000 project.wsgi:application'
 
   db:
     image: postgres:11
@@ -19,5 +20,13 @@ services:
       - ./postgres_db:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - '8080:80'
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+
 volumes:
   postgres_db:
