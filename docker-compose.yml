@@ -4,6 +4,7 @@ services:
     image: registry.gitlab.propulsion-home.ch/habib-kadiri/week-7/docker_motion:latest
     env_file:
       - ./env/dev.env
+    command: 'sh /scripts/dev.sh'
     ports:
     - 8000:8000
     volumes:
@@ -11,7 +12,6 @@ services:
 
     depends_on:
       - db
-    command: 'gunicorn --reload -w 4 -b 0.0.0.0:8000 project.wsgi:application'
 
   db:
     image: postgres:11
