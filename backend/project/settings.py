@@ -24,7 +24,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'j!(s=o+*&_am*%be+-^02abo0m*!!58f=@kej=c9@nb8xea&b4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = ast.literal_eval(os.environ.get('DJANGO_DEBUG'))
 
 ALLOWED_HOSTS = ['*']
 
@@ -44,7 +45,8 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.userprofiles',
     'apps.authentication',
-    'apps.friendrequests'
+    'apps.friendrequests',
+    'apps.comments'
 
 ]
 

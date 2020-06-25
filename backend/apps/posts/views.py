@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 from apps.posts.models import Post
 from apps.posts.permissions import IsPosterOrAdminOrReadOnly
-from apps.posts.serializers import PostSerializer, CreatePostSerializer
+from apps.posts.serializers import PostSerializer, SharedSerializer
 from apps.users.permissions import ReadOnly
 
 User = get_user_model()
@@ -17,22 +17,26 @@ User = get_user_model()
 
 class ListCreatePostsView(ListCreateAPIView):
     permission_classes = [IsAuthenticated | ReadOnly]
+    serializer_class = PostSerializer
 
     def list(self, request, *args, **kwargs):
         queryset = Post.objects.all().order_by('-created')
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return PostSerializer
-        return CreatePostSerializer
-
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(user=request.user)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        try:
+            shared_post = Post.objects.get(id=self.request.data.get("shared"))
+            serializer.save(user=self.request.user, shared=shared_post)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Post.DoesNotExist:
+            serializer.save(user=self.request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+
 
 
 class ListSpecificUserPostsView(ListAPIView):

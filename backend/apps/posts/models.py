@@ -14,3 +14,4 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     user = models.ForeignKey(on_delete=models.SET_NULL, null=True, to=User, related_name='posts')
     likes = models.ManyToManyField(to=User, blank=True, related_name='liked_posts')
+    shared = models.ForeignKey('Post', on_delete=models.SET_NULL, blank=True, null=True)

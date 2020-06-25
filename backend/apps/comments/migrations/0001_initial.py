@@ -12,11 +12,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='FriendRequest',
+            name='Comment',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('content', models.CharField(max_length=1000)),
                 ('created', models.DateTimeField(auto_now_add=True, null=True)),
-                ('status', models.CharField(choices=[('P', 'PENDING'), ('A', 'ACCEPTED'), ('R', 'REJECTED')], default='P', max_length=2)),
             ],
         ),
     ]

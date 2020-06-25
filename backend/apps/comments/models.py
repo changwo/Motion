@@ -10,6 +10,7 @@ class Comment(models.Model):
         return f'Comment ID: {self.id}'
 
     content = models.CharField(max_length=1000)
-    post = models.ForeignKey(on_delete=models.SET_NULL, null=True, to=Post, related_name='comments')
-    user_profile = models.ForeignKey(on_delete=models.SET_NULL, null=True, to=UserProfile, related_name='comments')
+    post = models.ForeignKey(on_delete=models.SET_NULL, blank=True, null=True, to=Post, related_name='comments')
+    user = models.ForeignKey(on_delete=models.SET_NULL, null=True, to=UserProfile, verbose_name="user",
+                             related_name='post_comments')
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
