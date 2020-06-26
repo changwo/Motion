@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 # from apps.likes.serializers import LikeSerializer
+from rest_framework.fields import SerializerMethodField
+
 from apps.comments.serializers import CommentSerializer
 from apps.posts.models import Post
 from apps.users.serializers import UserSerializer
@@ -34,3 +36,4 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['amount_of_likes', 'id', 'content', 'created', 'user', 'comments', 'shared']
+

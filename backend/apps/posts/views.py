@@ -75,11 +75,11 @@ class RetrieveUpdateDestroyPostView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsPosterOrAdminOrReadOnly]
     queryset = Post
     lookup_url_kwarg = 'post_id'
-
-    def get_serializer_class(self):
-        if self.request.method == 'GET' or 'PATCH':
-            return PostSerializer
-        return CreatePostSerializer
+    serializer_class = PostSerializer
+    # def get_serializer_class(self):
+    #     if self.request.method == 'GET' or 'PATCH':
+    #         return PostSerializer
+    #     return CreatePostSerializer
 
 
 class RetrieveMyPosts(ListAPIView):
