@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework import serializers
 
 from apps.posts.views import ListCreatePostsView, RetrieveUpdateDestroyPostView, ListSpecificUserPostsView, \
-    ListPostsUserLikesView, ToggleLikePostVew, ListAllUserFriendsPosts
+    ListPostsUserLikesView, ToggleLikePostVew, ListAllUserFriendsPosts, SearchPostsByContentAndUser
 
 urlpatterns = [
     path('', ListCreatePostsView.as_view()),
@@ -11,4 +11,5 @@ urlpatterns = [
     path('toggle-like/<int:post_id>/', ToggleLikePostVew.as_view()),
     path('likes/', ListPostsUserLikesView.as_view()),
     path('friends/', ListAllUserFriendsPosts.as_view()),
+    path('search=<str:search_string>/', SearchPostsByContentAndUser.as_view()),
 ]

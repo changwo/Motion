@@ -12,11 +12,11 @@ class UserSerializer(serializers.ModelSerializer):
     amount_following = serializers.SerializerMethodField()
     amount_of_friends = serializers.SerializerMethodField()
     amount_of_followers = serializers.SerializerMethodField()
+    logged_in_user_sent_fr = serializers.SerializerMethodField()
     logged_in_user_is_friends = serializers.SerializerMethodField()
     logged_in_user_is_rejected = serializers.SerializerMethodField()
-    logged_in_user_is_following = serializers.SerializerMethodField()
     logged_in_user_received_fr = serializers.SerializerMethodField()
-    logged_in_user_sent_fr = serializers.SerializerMethodField()
+    logged_in_user_is_following = serializers.SerializerMethodField()
 
     def get_amount_of_posts(self, obj):
         return len(obj.posts.all())
@@ -82,6 +82,8 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'location',
             'about_me',
+            'avatar',
+            'banner',
             'amount_of_posts',
             'amount_following',
             'amount_of_followers',
@@ -93,6 +95,11 @@ class UserSerializer(serializers.ModelSerializer):
             'things_user_likes',
             'logged_in_user_received_fr',
             'logged_in_user_sent_fr',
-            # 'received',
-            # 'requested'
         ]
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'email': {'read_only': True},
+            'received': {'read_only': True},
+            'language': {'read_only': True},
+            'style': {'read_only': True}
+        }

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 # Create your models here.
@@ -12,6 +13,7 @@ class Post(models.Model):
 
     content = models.CharField(max_length=1000)
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    images = models.ImageField(null=True, blank=True)
     user = models.ForeignKey(on_delete=models.SET_NULL, null=True, to=User, related_name='posts')
     likes = models.ManyToManyField(to=User, blank=True, related_name='liked_posts')
-    shared = models.ForeignKey('Post', on_delete=models.SET_NULL, blank=True, null=True)
+    shared = models.ForeignKey('Post', on_delete=models.SET_NULL, blank=True, null=True, related_name='shared_by')
