@@ -97,9 +97,25 @@ class UserSerializer(serializers.ModelSerializer):
             'logged_in_user_sent_fr',
         ]
         extra_kwargs = {
-            'id': {'read_only': True},
             'email': {'read_only': True},
-            'received': {'read_only': True},
-            'language': {'read_only': True},
-            'style': {'read_only': True}
         }
+
+
+class CreateUserSerializer(UserSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'first_name',
+            'last_name',
+            'username',
+            'email',
+        ]
+
+
+class ResetPasswordSerializer(UserSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'email',
+            'password',
+        ]

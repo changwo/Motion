@@ -6,7 +6,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from apps.registration.models import Registration
+from apps.authentication.models import RegistrationProfile
 from apps.userprofiles.models import UserProfile
 
 User = get_user_model()
@@ -46,12 +46,12 @@ def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()
 
 
-@receiver(post_save, sender=User)
-def create_registration(sender, instance, created, **kwargs):
-    if created:
-        Registration.objects.create(user=instance)
-
-
-@receiver(post_save, sender=User)
-def save_registration(sender, instance, **kwargs):
-    instance.registration.save()
+# @receiver(post_save, sender=User)
+# def create_registration_profile(sender, instance, created, **kwargs):
+#     if created:
+#         RegistrationProfile.objects.create(user=instance)
+#
+#
+# @receiver(post_save, sender=User)
+# def save_registration_profile(sender, instance, **kwargs):
+#     instance.registration_profile.save()

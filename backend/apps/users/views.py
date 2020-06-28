@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from rest_framework import generics
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, \
-    RetrieveUpdateAPIView, get_object_or_404
+    RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -97,3 +97,4 @@ class SearchUsersByFirstLastUsername(generics.ListAPIView):
         keyword = self.kwargs['search_string']
         return User.objects.filter(Q(first_name__icontains=keyword) | Q(
             last_name__icontains=keyword) | Q(username__icontains=keyword))
+

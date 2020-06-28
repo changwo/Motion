@@ -14,7 +14,10 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from datetime import timedelta
-#dsfsdfs
+
+# dsfsdfs
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -44,7 +47,6 @@ INSTALLED_APPS = [
     # Apps
     'apps.posts',
     'apps.users',
-    'apps.registration',
     'apps.userprofiles',
     'apps.authentication',
     'apps.friendrequests',
@@ -69,14 +71,14 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=5)
 }
-#d
+# d
 ROOT_URLCONF = 'project.urls'
 
 TEMPLATES = [
@@ -151,6 +153,14 @@ MEDIA_URL = '/media/'
 # MEDIA_ROOT = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# settings.py
+## IMPORTANT - DONT FORGET TO ADD THE ENV VARIABLES IN THE ENV FILE
 
+DEFAULT_FROM_EMAIL = 'mailto:students@propulsionacademy.com'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'students@propulsionacademy.com'
+EMAIL_HOST_PASSWORD = 'Ahsdfhj83j3h4rweeoiuhas83dbj3j3dmnvbl'
+EMAIL_PORT = 587
 
 AUTH_USER_MODEL = 'users.User'
