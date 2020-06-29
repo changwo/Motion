@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
+from django.http import HttpResponseBadRequest
 from rest_framework import serializers
 
+from apps.authentication.models import get_or_none
 from apps.postimages.models import PostImage
 from apps.postimages.serializers import PostImageSerializer
 from apps.posts.models import Post
@@ -13,9 +15,18 @@ class SharedSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False, read_only=True)
     amount_of_likes = serializers.SerializerMethodField()
     amount_of_comments = serializers.SerializerMethodField()
+    images = serializers.SerializerMethodField()
+
+    def get_images(self, post):
+        request = self.context.get('request')
+        old_post_images = PostImage.objects.filter(post=post)
+        images = PostImageSerializer(data=old_post_images, many=True)
+        images.is_valid()
+        return [request.build_absolute_uri(image['image']) for image in images.data]
+
 
     def get_amount_of_likes(self, obj):
-        return len(obj.likes.all())
+        return obj.likes.count()
 
     def get_amount_of_comments(self, obj):
         return obj.comments.count()
@@ -23,7 +34,10 @@ class SharedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         exclude = []
-
+    def get_fields(self):
+        fields = super(SharedSerializer, self).get_fields()
+        fields['shared'] = SharedSerializer()
+        return fields
 
 class PostSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False, read_only=True)
@@ -54,6 +68,8 @@ class PostSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         # If no images in request, do nothing and return old image list
         old_post_images = PostImage.objects.filter(post=post)
+        # PostImage.objects.get(post=post)
+
         if not request_images:
             images = PostImageSerializer(data=old_post_images, many=True)
             images.is_valid()
@@ -83,4 +99,3 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ['amount_of_likes', 'amount_of_shares', 'images', 'id', 'content', 'created', 'user', 'images',
                   'amount_of_comments',
                   'shared']
-

@@ -13,6 +13,18 @@ def code_generator(length=5):
     return ''.join(random.choice(numbers) for _ in range(length))
 
 
+def get_or_none(model, *args, **kwargs):
+    try:
+        return model.objects.get(*args, **kwargs)
+    except model.DoesNotExist:
+        return None
+
+def get_or_empty(model, *args, **kwargs):
+    try:
+        return model.objects.get(*args, **kwargs)
+    except model.DoesNotExist:
+        return []
+
 # This code is not used for this project. It is only to showcase OneToOneFields
 class RegistrationProfile(models.Model):
     user = models.OneToOneField(

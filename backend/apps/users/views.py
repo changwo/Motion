@@ -20,6 +20,7 @@ User = get_user_model()
 class GetAndUpdateLoggedInUserProfile(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated | ReadOnly]
     serializer_class = UserSerializer
+    http_method_names = ['get', 'patch']
 
     def retrieve(self, request, *args, **kwargs):
         serializer = self.get_serializer(request.user)

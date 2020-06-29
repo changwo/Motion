@@ -8,6 +8,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from apps.authentication.models import get_or_none
 from apps.posts.models import Post
 from apps.posts.permissions import IsPosterOrAdminOrReadOnly
 from apps.posts.serializers import PostSerializer
@@ -19,7 +20,6 @@ User = get_user_model()
 class ListCreatePostsView(ListCreateAPIView):
     permission_classes = [IsAuthenticated | ReadOnly]
     serializer_class = PostSerializer
-
 
     def get_all_friends_emails(self, obj):
         total_friends_emails = []
@@ -41,17 +41,13 @@ class ListCreatePostsView(ListCreateAPIView):
         friends_emails_list = self.get_all_friends_emails(request.user)
         email = EmailMessage()
         email.subject = 'A Friend made a new Post!'
-        email.body = '{requester} just made a new post, be the first to like comment or share!'.format(requester=request.user.first_name if len(request.user.first_name) else request.user.username)
+        email.body = '{requester} just made a new post, be the first to like comment or share!'.format(
+            requester=request.user.first_name if len(request.user.first_name) else request.user.username)
         email.to = friends_emails_list
-        try:
-            shared_post = Post.objects.get(id=self.request.data.get("shared"))
-            serializer.save(user=self.request.user, shared=shared_post, images=self.request.data.get('images'))
-            email.send(fail_silently=False)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Post.DoesNotExist:
-            serializer.save(user=self.request.user)
-            email.send(fail_silently=False)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        shared_post = get_or_none(Post, id=self.request.data.get("shared"))
+        serializer.save(user=self.request.user, shared=shared_post)
+        email.send(fail_silently=False)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class ListSpecificUserPostsView(ListAPIView):
