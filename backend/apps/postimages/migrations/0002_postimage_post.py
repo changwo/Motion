@@ -10,13 +10,13 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('posts', '0001_initial'),
-        ('comments', '0001_initial'),
+        ('postimages', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='comment',
+            model_name='postimage',
             name='post',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='comments', to='posts.Post'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='images', to='posts.Post'),
         ),
     ]

@@ -40,7 +40,7 @@ urlpatterns = [
     # Auth Urls...
     path('backend/api/auth/', include('apps.authentication.urls')),
     # API Docs Urls ...
-    path('api/docs/', include_docs_urls(title='Motion API', public=False, permission_classes=[])),
+    path('api/docs/', include_docs_urls(title='Motion API', public=True, permission_classes=[])),
 ]
 # Images Urls..
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

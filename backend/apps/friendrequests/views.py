@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.mail import send_mail, EmailMessage
 from django.db import IntegrityError
 from django.shortcuts import render
 
@@ -28,6 +29,16 @@ class ListAllFriendRequestsView(ListAPIView):
 
 
 class CreateFriendRequestView(CreateAPIView):
+    """
+
+
+    -----------------------------------------------------------------------------------------------------------------
+    Create a friend request by placing the user_id of the target user you wish to send a friend request to in the URL
+    The request body can be empty.
+    -----------------------------------------------------------------------------------------------------------------
+
+
+    """
     lookup_url_kwarg = 'user_id'
     queryset = User
     serializer_class = FriendRequestSerializer
@@ -37,6 +48,15 @@ class CreateFriendRequestView(CreateAPIView):
         receiver = self.get_object()
         requester = self.request.user
         request_instance = FriendRequest(requester=requester, receiver=receiver)
+        send_mail(
+            f'Someone sent you a friend request!',
+            'Hey {receiver},\n{requester} sent you a friend request, login and accept or reject their friend request!'.format(
+                receiver=receiver.first_name if len(receiver.first_name) else receiver.username,
+                requester=requester.first_name if len(requester.first_name) else requester.username),
+            'students@propulsionacademy.com',
+            [receiver.email],
+            fail_silently=False,
+        )
         try:
             request_instance.save()
             return Response(self.get_serializer(instance=request_instance).data)
@@ -45,10 +65,34 @@ class CreateFriendRequestView(CreateAPIView):
 
 
 class AcceptOrRejectFriendRequestView(RetrieveUpdateDestroyAPIView):
+    """
+
+    -----------------------------------------------------------------------------------------------------------------
+    Method Patch:
+    Create a friend request by placing the user_id of the target user you wish to send a friend request to in the URL
+    The request body can be empty.
+    -----------------------------------------------------------------------------------------------------------------
+
+
+    """
     lookup_url_kwarg = 'friend_request_id'
     serializer_class = FriendRequestSerializer
     queryset = FriendRequest
     permission_classes = [IsReceiverOrRequesterOrAdmin]
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        target_friend_request = self.get_object()
+        serializer = self.get_serializer(target_friend_request, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        if target_friend_request.status == 'A':
+            email = EmailMessage()
+            email.subject = f'{target_friend_request.receiver.first_name} accepted your friend request!'
+            email.body = f'Hey {target_friend_request.requester.first_name},\n{target_friend_request.receiver.first_name} {target_friend_request.receiver.last_name} accepted you friend request, login and say hi!  '
+            email.to = [target_friend_request.requester.email]
+            email.send(fail_silently=False)
+        return Response(serializer.data)
 
 
 class ListAllUserFriends(ListAPIView):

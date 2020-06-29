@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
+from django.core.mail import EmailMessage
 from django.db.models import Q
-from django.forms import modelformset_factory
-from django.shortcuts import render
 
 # Create your views here.
 from rest_framework import status, generics
@@ -11,7 +10,7 @@ from rest_framework.response import Response
 
 from apps.posts.models import Post
 from apps.posts.permissions import IsPosterOrAdminOrReadOnly
-from apps.posts.serializers import PostSerializer, SharedSerializer
+from apps.posts.serializers import PostSerializer
 from apps.users.permissions import ReadOnly
 
 User = get_user_model()
@@ -21,6 +20,16 @@ class ListCreatePostsView(ListCreateAPIView):
     permission_classes = [IsAuthenticated | ReadOnly]
     serializer_class = PostSerializer
 
+
+    def get_all_friends_emails(self, obj):
+        total_friends_emails = []
+        for request_entry in list(obj.received.all()) + list(obj.requested.all()):
+            if request_entry.requester != obj and request_entry.status == 'A':
+                total_friends_emails.append(request_entry.requester.email)
+            if request_entry.receiver != obj and request_entry.status == 'A':
+                total_friends_emails.append(request_entry.receiver.email)
+        return total_friends_emails
+
     def list(self, request, *args, **kwargs):
         queryset = Post.objects.all().order_by('-created')
         serializer = self.get_serializer(queryset, many=True)
@@ -29,12 +38,19 @@ class ListCreatePostsView(ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        friends_emails_list = self.get_all_friends_emails(request.user)
+        email = EmailMessage()
+        email.subject = 'A Friend made a new Post!'
+        email.body = '{requester} just made a new post, be the first to like comment or share!'.format(requester=request.user.first_name if len(request.user.first_name) else request.user.username)
+        email.to = friends_emails_list
         try:
             shared_post = Post.objects.get(id=self.request.data.get("shared"))
             serializer.save(user=self.request.user, shared=shared_post, images=self.request.data.get('images'))
+            email.send(fail_silently=False)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Post.DoesNotExist:
             serializer.save(user=self.request.user)
+            email.send(fail_silently=False)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 

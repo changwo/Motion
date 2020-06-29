@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from apps.authentication.models import RegistrationProfile
 from apps.userprofiles.models import UserProfile
 
 User = get_user_model()
@@ -102,6 +103,14 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CreateUserSerializer(UserSerializer):
+    password_repeat = serializers.CharField(
+        min_length=4,
+        write_only=True,
+        required=True,
+        style={'input_type': 'password'}
+    )
+    code = serializers.CharField()
+
     class Meta:
         model = User
         fields = [
@@ -109,13 +118,56 @@ class CreateUserSerializer(UserSerializer):
             'last_name',
             'username',
             'email',
+            'password',
+            'password_repeat',
+            'code',
         ]
+
+    def validate(self, data):
+        try:
+            target_profile = RegistrationProfile.objects.get(email=data.get('email'))
+        except RegistrationProfile.DoesNotExist:
+            raise serializers.ValidationError({"detail": "Your email is incorrect or does not exist!"})
+        if data.get('code') != target_profile.code:
+            raise serializers.ValidationError({"detail": "Your validation code is incorrect!"})
+        if data.get('password') != data.get('password_repeat'):
+            raise serializers.ValidationError({"detail": "the passwords do not match!"})
+        if not len(data.get('first_name')):
+            raise serializers.ValidationError({"detail": "First name cannot be empty!"})
+        if not len(data.get('username')):
+            raise serializers.ValidationError({"detail": "Username cannot be empty!"})
+        if not len(data.get('last_name')):
+            raise serializers.ValidationError({"detail": "Last name cannot be empty!"})
+        return data
 
 
 class ResetPasswordSerializer(UserSerializer):
+    password_repeat = serializers.CharField(
+        min_length=4,
+        write_only=True,
+        required=True,
+        style={'input_type': 'password'}
+    )
+
+    code = serializers.CharField()
+
+    email = serializers.CharField(write_only=True,
+                                  required=True, )
+
     class Meta:
         model = User
         fields = [
             'email',
             'password',
+            'password_repeat',
+            'code',
         ]
+
+    def validate(self, data):
+        target_profile = RegistrationProfile.objects.get(email=data.get('email'))
+        if data.get('code') != target_profile.code:
+            raise serializers.ValidationError({"detail": "Your validation code is incorrect!"})
+        if data.get('password') != data.get('password_repeat'):
+            raise serializers.ValidationError({"detail": "the passwords do not match!"})
+        return data
+

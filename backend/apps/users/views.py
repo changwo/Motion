@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 
 # Create your views here.
+from django.core.mail import send_mail
 from django.db.models import Q
 from rest_framework import generics
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, \
@@ -28,7 +29,6 @@ class GetAndUpdateLoggedInUserProfile(RetrieveUpdateAPIView):
         return self.request.user
 
 
-
 class ToggleFollowUserView(CreateAPIView):
     permission_classes = [CannotFollowSelf]
     queryset = UserProfile
@@ -43,6 +43,15 @@ class ToggleFollowUserView(CreateAPIView):
             receiver.followers.remove(requester)
         else:
             receiver.followers.add(requester)
+            send_mail(
+                f'You got a new follower!',
+                'Hey {receiver},\n{requester} started following you, login and check out his/her profile!'.format(
+                    receiver=receiver.user.first_name if len(receiver.user.first_name) else receiver.user.username,
+                    requester=requester.first_name if len(requester.first_name) else requester.username),
+                'students@propulsionacademy.com',
+                [receiver.user.email],
+                fail_silently=False,
+            )
         updated_user = User.objects.get(id=self.kwargs['user_id'])
         return Response(self.get_serializer(updated_user).data)
 
@@ -97,4 +106,3 @@ class SearchUsersByFirstLastUsername(generics.ListAPIView):
         keyword = self.kwargs['search_string']
         return User.objects.filter(Q(first_name__icontains=keyword) | Q(
             last_name__icontains=keyword) | Q(username__icontains=keyword))
-

@@ -12,10 +12,10 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Post',
+            name='PostImage',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('content', models.CharField(max_length=1000)),
+                ('image', models.ImageField(blank=True, null=True, upload_to='')),
                 ('created', models.DateTimeField(auto_now_add=True, null=True)),
             ],
         ),

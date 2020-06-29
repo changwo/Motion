@@ -15,9 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from datetime import timedelta
 
-# dsfsdfs
-
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -46,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     # Apps
     'apps.posts',
+    'apps.postimages',
     'apps.users',
     'apps.userprofiles',
     'apps.authentication',
@@ -156,11 +154,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # settings.py
 ## IMPORTANT - DONT FORGET TO ADD THE ENV VARIABLES IN THE ENV FILE
 
-DEFAULT_FROM_EMAIL = 'mailto:students@propulsionacademy.com'
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'students@propulsionacademy.com'
-EMAIL_HOST_PASSWORD = 'Ahsdfhj83j3h4rweeoiuhas83dbj3j3dmnvbl'
-EMAIL_PORT = 587
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
 
 AUTH_USER_MODEL = 'users.User'

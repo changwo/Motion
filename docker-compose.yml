@@ -22,12 +22,12 @@ services:
     ports:
       - '5432:5432'
 
-  nginx:
-    image: nginx:latest
-    ports:
-      - '8080:80'
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
+#  nginx:
+#    image: nginx:latest
+#    ports:
+#      - '8080:80'
+#    volumes:
+#      - ./nginx:/etc/nginx/conf.d
 
 
 #volumes:
