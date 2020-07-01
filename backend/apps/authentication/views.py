@@ -27,7 +27,7 @@ class CreateValidationCode(CreateAPIView):
         headers = self.get_success_headers(serializer.data)
         target_profile = RegistrationProfile.objects.get(email=request.data['email'])
         send_mail(
-            'Account creation code',
+            'Thanks for registering',
             f'See your account creation code: {target_profile.code}',
             'students@propulsionacademy.com',
             [request.data['email']],
@@ -82,15 +82,12 @@ class ResetPasswordView(UpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
-        try:
-            target_profile = RegistrationProfile.objects.get(email=request.data['email'])
-            serializer = self.get_serializer(target_profile, data=request.data, partial=partial)
-            serializer.is_valid(raise_exception=True)
-            target_profile.user.set_password(request.data['password'])
-            target_profile.user.save()
-            # user_data = self.get_serializer(target_profile.user).data
-            target_profile.code = code_generator()
-            target_profile.save()
-            return Response(status=status.HTTP_202_ACCEPTED)
-        except RegistrationProfile.DoesNotExist:
-            return Response({"detail": "Your email doesn't match any profile or is invalid."}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.get_serializer(data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        target_profile = RegistrationProfile.objects.get(email=request.data['email'])
+        target_profile.user.set_password(request.data['password'])
+        target_profile.user.save()
+        target_profile.code = code_generator()
+        target_profile.save()
+        return Response(status=status.HTTP_202_ACCEPTED)
+

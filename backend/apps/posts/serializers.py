@@ -11,11 +11,20 @@ from apps.users.serializers import UserSerializer
 User = get_user_model()
 
 
-class SharedSerializer(serializers.ModelSerializer):
+class GetPostSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False, read_only=True)
     amount_of_likes = serializers.SerializerMethodField()
     amount_of_comments = serializers.SerializerMethodField()
+    amount_of_shares = serializers.SerializerMethodField()
     images = serializers.SerializerMethodField()
+    is_from_logged_in_user = serializers.SerializerMethodField()
+    logged_in_user_liked = serializers.SerializerMethodField()
+
+    def get_is_from_logged_in_user(self, post):
+        return self.context.get('request').user == post.user
+
+    def get_logged_in_user_liked(self, post):
+        return self.context.get('request').user in post.likes.all()
 
     def get_images(self, post):
         request = self.context.get('request')
@@ -24,28 +33,40 @@ class SharedSerializer(serializers.ModelSerializer):
         images.is_valid()
         return [request.build_absolute_uri(image['image']) for image in images.data]
 
-
     def get_amount_of_likes(self, obj):
         return obj.likes.count()
 
     def get_amount_of_comments(self, obj):
         return obj.comments.count()
 
+    def get_amount_of_shares(self, obj):
+        return obj.shared_by.count()
+
     class Meta:
         model = Post
         exclude = []
+
     def get_fields(self):
-        fields = super(SharedSerializer, self).get_fields()
-        fields['shared'] = SharedSerializer()
+        fields = super(GetPostSerializer, self).get_fields()
+        fields['shared'] = GetPostSerializer()
         return fields
 
-class PostSerializer(serializers.ModelSerializer):
-    user = UserSerializer(required=False, read_only=True)
-    shared = SharedSerializer(required=False, read_only=True)
+
+class CreatePostSerializer(serializers.ModelSerializer):
+    shared = GetPostSerializer(required=False, read_only=True)
     amount_of_likes = serializers.SerializerMethodField()
     amount_of_comments = serializers.SerializerMethodField()
     amount_of_shares = serializers.SerializerMethodField()
     images = serializers.SerializerMethodField()
+    is_from_logged_in_user = serializers.SerializerMethodField()
+    logged_in_user_liked = serializers.SerializerMethodField()
+    user = UserSerializer(required=False, read_only=True)
+
+    def get_is_from_logged_in_user(self, post):
+        return self.context.get('request').user == post.user
+
+    def get_logged_in_user_liked(self, post):
+        return self.context.get('request').user in post.likes.all()
 
     def get_amount_of_shares(self, obj):
         return obj.shared_by.all().count()
@@ -96,6 +117,5 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['amount_of_likes', 'amount_of_shares', 'images', 'id', 'content', 'created', 'user', 'images',
-                  'amount_of_comments',
-                  'shared']
+        fields = ['id', 'amount_of_likes', 'amount_of_shares', 'is_from_logged_in_user', 'logged_in_user_liked',
+                  'images', 'content', 'created', 'user', 'images', 'amount_of_comments', 'shared']

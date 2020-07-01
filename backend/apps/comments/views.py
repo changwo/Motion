@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from apps.comments.models import Comment
 from apps.comments.serializers import CommentSerializer
 from apps.posts.models import Post
-from apps.posts.serializers import PostSerializer
+from apps.posts.serializers import CreatePostSerializer
 from apps.users.permissions import ReadOnly
 
 
@@ -40,5 +40,4 @@ class CreateOrGetPostCommentsView(ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         post = self.get_object()
         serializer.save(userProfile=self.request.user.userprofile, post=post)
-        self.serializer_class = PostSerializer
-        return Response(self.get_serializer(post).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

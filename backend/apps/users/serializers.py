@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from apps.authentication.models import RegistrationProfile
+from apps.authentication.models import RegistrationProfile, get_or_none
 from apps.userprofiles.models import UserProfile
 
 User = get_user_model()
@@ -164,8 +164,9 @@ class ResetPasswordSerializer(UserSerializer):
         ]
 
     def validate(self, data):
-        target_profile = RegistrationProfile.objects.get(email=data.get('email'))
-        if data.get('code') != target_profile.code:
+        if not get_or_none(RegistrationProfile, email=data.get('email')):
+            raise serializers.ValidationError({"detail": "Your email is invalid!"})
+        if data.get('code') != RegistrationProfile.objects.get(email=data.get('email')).code:
             raise serializers.ValidationError({"detail": "Your validation code is incorrect!"})
         if data.get('password') != data.get('password_repeat'):
             raise serializers.ValidationError({"detail": "the passwords do not match!"})

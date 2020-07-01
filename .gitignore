@@ -3,3 +3,4 @@ __pycache__
 *.pyc
 /backend/media/
 !/backend/media/
+media

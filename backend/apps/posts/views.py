@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from apps.authentication.models import get_or_none
 from apps.posts.models import Post
 from apps.posts.permissions import IsPosterOrAdminOrReadOnly
-from apps.posts.serializers import PostSerializer
+from apps.posts.serializers import CreatePostSerializer, GetPostSerializer
 from apps.users.permissions import ReadOnly
 
 User = get_user_model()
@@ -19,7 +19,12 @@ User = get_user_model()
 
 class ListCreatePostsView(ListCreateAPIView):
     permission_classes = [IsAuthenticated | ReadOnly]
-    serializer_class = PostSerializer
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return GetPostSerializer
+        return CreatePostSerializer
+
+    # serializer_class = CreatePostSerializer
 
     def get_all_friends_emails(self, obj):
         total_friends_emails = []
@@ -52,7 +57,7 @@ class ListCreatePostsView(ListCreateAPIView):
 
 class ListSpecificUserPostsView(ListAPIView):
     permission_classes = [IsAuthenticated | ReadOnly]
-    serializer_class = PostSerializer
+    serializer_class = GetPostSerializer
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
@@ -62,7 +67,7 @@ class ListSpecificUserPostsView(ListAPIView):
 
 class ListPostsUserLikesView(ListAPIView):
     permission_classes = [IsAuthenticated | ReadOnly]
-    serializer_class = PostSerializer
+    serializer_class = GetPostSerializer
 
     def list(self, request, *args, **kwargs):
         queryset = request.user.liked_posts.all().order_by('-created')
@@ -72,7 +77,7 @@ class ListPostsUserLikesView(ListAPIView):
 
 class ListFollowingPostsView(ListAPIView):
     permission_classes = [IsAuthenticated | ReadOnly]
-    serializer_class = PostSerializer
+    serializer_class = GetPostSerializer
 
     def list(self, request, *args, **kwargs):
         total_posts = []
@@ -84,15 +89,20 @@ class ListFollowingPostsView(ListAPIView):
 
 
 class RetrieveUpdateDestroyPostView(RetrieveUpdateDestroyAPIView):
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return GetPostSerializer
+        return CreatePostSerializer
+
     permission_classes = [IsPosterOrAdminOrReadOnly]
     queryset = Post
     lookup_url_kwarg = 'post_id'
-    serializer_class = PostSerializer
+    # serializer_class = CreatePostSerializer
 
 
 class RetrieveMyPosts(ListAPIView):
     permission_classes = [IsAuthenticated | ReadOnly]
-    serializer_class = PostSerializer
+    serializer_class = GetPostSerializer
 
     def list(self, request, *args, **kwargs):
         queryset = request.user.posts.all().order_by('-created')
@@ -104,7 +114,7 @@ class RetrieveMyPosts(ListAPIView):
 class ToggleLikePostVew(CreateAPIView):
     permission_classes = [IsAuthenticated | ReadOnly]
     queryset = Post
-    serializer_class = PostSerializer
+    serializer_class = GetPostSerializer
     lookup_url_kwarg = 'post_id'
 
     def post(self, request, *args, **kwargs):
@@ -120,7 +130,7 @@ class ToggleLikePostVew(CreateAPIView):
 
 class ListAllUserFriendsPosts(ListAPIView):
     www_authenticate_realm = 'posts'
-    serializer_class = PostSerializer
+    serializer_class = GetPostSerializer
     permission_classes = [IsAuthenticated | ReadOnly]
 
     def list(self, request, *args, **kwargs):
@@ -136,7 +146,7 @@ class ListAllUserFriendsPosts(ListAPIView):
 
 
 class SearchPostsByContentAndUser(generics.ListAPIView):
-    serializer_class = PostSerializer
+    serializer_class = GetPostSerializer
     permission_classes = [IsAuthenticated | ReadOnly]
 
     def get_queryset(self):
