@@ -4,8 +4,8 @@ services:
     image: registry.gitlab.propulsion-home.ch/habib-kadiri/week-7/docker_motion:latest
     volumes:
     - static-files:/static
-    - media-files:/media
     - frontend:/frontend/build
+    - media-files:/backend/media
     env_file:
       - ./env/prod.env
     command: 'sh /scripts/run.sh'
