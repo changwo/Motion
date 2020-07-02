@@ -44,8 +44,8 @@ const UserPromptModal = (props) => {
         e.preventDefault();
         const form = new FormData()
         form.append('content', postInfo.content)
-        form.append('images', postInfo.images)
-        if (postInfo.images.length) {
+        // form.append('images', postInfo.images)
+        if (postInfo.images) {
             for (let key in postInfo.images) {
                 form.append(`images`, postInfo.images[key])
             }

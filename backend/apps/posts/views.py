@@ -19,6 +19,7 @@ User = get_user_model()
 
 class ListCreatePostsView(ListCreateAPIView):
     permission_classes = [IsAuthenticated | ReadOnly]
+
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return GetPostSerializer
@@ -154,3 +155,13 @@ class SearchPostsByContentAndUser(generics.ListAPIView):
         return Post.objects.filter(
             Q(content__icontains=keyword) | Q(user__first_name__icontains=keyword) | Q(
                 user__last_name__icontains=keyword) | Q(user__username__icontains=keyword)).order_by('-created')
+
+
+class GetLoggedInUserPosts(ListAPIView):
+    permission_classes = [IsAuthenticated | ReadOnly]
+    serializer_class = GetPostSerializer
+
+    def list(self, request, *args, **kwargs):
+        serializer = self.get_serializer(request.user.posts, many=True)
+        return Response(serializer.data)
+

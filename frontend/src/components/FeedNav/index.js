@@ -23,20 +23,16 @@ import {
     MenuImg,
     DropDown,
 } from "../../style/navs";
-import {Link, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import {GET_ALL_USERS, USER_LOGOUT} from "../../store/types";
-import {getProfilesAction} from "../../store/actions/profileAction";
+
 
 const FeedNav = (props) => {
     const refreshPage = () => {
         window.location.reload(false);
     };
     const {
-        profileReducer: {allUsersList},
-        authReducer: {token},
-        userReducer: {id, email, first_name, last_name, avatar},
-        registration,
-        postReducer: {userPosts, friendPosts, followingPosts},
+        userReducer: { avatar},
     } = props;
 
     // useEffect(() => {
@@ -99,7 +95,7 @@ const FeedNav = (props) => {
 };
 
 const mapStateToProps = (state) => {
-    console.log("state", state)
+
     return {
         authReducer: state.authReducer,
         userReducer: state.userReducer,

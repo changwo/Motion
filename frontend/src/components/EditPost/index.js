@@ -27,16 +27,12 @@ import {updatePostAction} from "../../store/actions/postAction";
 
 const EditPost = (props) => {
   const dispatch = useDispatch();
-  console.log("EditPost -> props", props);
+
   const {
-    authReducer: { token },
     handleCloseModal,
     post: {
-      shared,
       id,
       created,
-      logged_in_user_liked,
-      amount_of_likes,
       content,
       user: { first_name, last_name, avatar },
     },

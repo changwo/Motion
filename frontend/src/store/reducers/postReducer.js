@@ -34,6 +34,7 @@ export const postReducer = (state = initialState, action) => {
                 return {...newState, friendPosts: action.payload};
             }
             case ADD_POST_TO_LIST: {
+                debugger
                 return {...newState, userPosts: [action.payload.post,...newState.userPosts]};
             }
             case UPDATE_POST_IN_LIST: {

@@ -34,7 +34,7 @@ const FollowerCard = (props) => {
             location,
         },
     } = props;
-    console.log("FollowerCard -> myID", myID);
+
 
     const dispatch = useDispatch();
     const handleSendFriendRequest = () => {
