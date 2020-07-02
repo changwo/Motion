@@ -5,14 +5,18 @@ from django.shortcuts import render
 from rest_framework import status
 
 from rest_framework.generics import CreateAPIView, UpdateAPIView
+from rest_framework.permissions import AllowAny
 
 from rest_framework.response import Response
 from django.core.mail import send_mail, EmailMessage
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 from apps.authentication.models import RegistrationProfile, code_generator
 from apps.authentication.permissions import AllowCreateRegistrationProfile
-from apps.authentication.serializers import RegistrationSerializer
+from apps.authentication.serializers import RegistrationSerializer, MyTokenObtainPairSerializer
 
-from apps.users.serializers import CreateUserSerializer, ResetPasswordSerializer
+from apps.users.serializers import CreateUserSerializer, ResetPasswordSerializer, UserSerializer
 
 
 class CreateValidationCode(CreateAPIView):
@@ -91,3 +95,29 @@ class ResetPasswordView(UpdateAPIView):
         target_profile.save()
         return Response(status=status.HTTP_202_ACCEPTED)
 
+
+# Create your views here.
+
+class LoginView(TokenObtainPairView):
+    permission_classes = [AllowAny, ]
+
+    """
+    Login View with jWt token authentication
+    """
+    serializer_class = MyTokenObtainPairSerializer
+    def post(self, request, *args, **kwargs):
+        User = get_user_model()
+        serializer = self.get_serializer(data=request.data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
+
+        user_id = int(serializer.validated_data['user_id'])
+        user_profile = User.objects.filter(id=user_id)
+        user_profile = UserSerializer()
+
+        user_info = {'user': user_profile.data}
+        serializer.validated_data.update(user_info)
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)

@@ -1,6 +1,9 @@
 .idea
 __pycache__
 *.pyc
-/backend/media/
+backend/media/
 !/backend/media/
 media
+node_modules
+!/DockerfileCopy
+!/.gitlab-ciCopy.yml

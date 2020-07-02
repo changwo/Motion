@@ -5,6 +5,7 @@ services:
     volumes:
     - static-files:/static
     - media-files:/media
+    - frontend:/frontend/build
     env_file:
       - ./env/prod.env
     command: 'sh /scripts/run.sh'
@@ -28,6 +29,7 @@ services:
       - ./nginx:/etc/nginx/conf.d
       - static-files:/static
       - media-files:/media
+      - frontend:/frontend
       - /etc/letsencrypt/:/etc/letsencrypt/
 
 
@@ -35,5 +37,6 @@ volumes:
   postgres_db:
   static-files:
   media-files:
+  frontend:
 
 
