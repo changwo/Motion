@@ -69,7 +69,11 @@ MIDDLEWARE = [
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000/',
+    'http://localhost:3000',
+    'http://localhost:8000',
+    'http://localhost:8080',
 ]
+
 CORS_ORIGIN_REGEX_WHITELIST = [
     'http://localhost:3000/',
 ]
@@ -81,6 +85,7 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
 ]
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',

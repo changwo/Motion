@@ -10,14 +10,15 @@ import Axios from "../../axios";
 
 export const sendCode = data => async (dispatch) => {
   try {
+    console.log("data obj", data)
     const response = await Axios.post('auth/registration/', data);
     await dispatch({ type: TOGGLE_CODE_SENT, data })
     console.log("successads!", response.data)
     return response
   } catch (e) {
-    await dispatch(sendSignUpError(e.response.data.email[0]));
+    // await dispatch(sendSignUpError(e.response.data.email[0]));
     console.log("error message", e.response )
-    return e.response
+    return e
   }
 }
 

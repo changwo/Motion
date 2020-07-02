@@ -49,6 +49,7 @@ const SignUp = (props) => {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
+
     dispatch(sendCode({ email }, "api/auth/registration/"));
   };
 
