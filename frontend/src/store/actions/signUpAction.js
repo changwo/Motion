@@ -23,7 +23,7 @@ export const sendCode = data => async (dispatch) => {
 
 export const validate = data => async (dispatch) => {
   try {
-    const response = await Axios.patch('auth/registration/validation/', data);
+    const response = await Axios.post('auth/registration/validation/', data);
     await dispatch({ type: TOGGLE_SIGNUP })
     await dispatch({ type: RESET_REGISTRATION })
     return response
