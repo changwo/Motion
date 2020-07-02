@@ -57,7 +57,7 @@ export const addPostToList = (post) => {
 export const createPostAction = data => async (dispatch, getState) => {
 
     try {
-        const response = await Axios.post('/social/posts/', data);
+        const response = await Axios.post('/social/posts/', data, );
         console.log("response", response.data)
         dispatch(addPostToList(response.data))
         dispatch(resetError('createPostError'))

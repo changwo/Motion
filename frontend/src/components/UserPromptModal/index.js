@@ -45,11 +45,11 @@ const UserPromptModal = (props) => {
         const form = new FormData()
         form.append('content', postInfo.content)
         form.append('images', postInfo.images)
-        // if (postInfo.images.length) {
-        //     for (let i = 0; i < postInfo.images.length; i++) {
-        //         form.append(`images[${i}]`, postInfo.images[i])
-        //     }
-        // }
+        if (postInfo.images.length) {
+            for (let key in postInfo.images) {
+                form.append(`images`, postInfo.images[key])
+            }
+        }
         const response = await dispatch(createPostAction(form));
         if (response.status === 201) {
             setPostInfo({
