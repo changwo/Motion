@@ -20,7 +20,7 @@ export const UpdateInfo = styled.form`
   box-shadow: ${(props) => props.theme.boxShadow};
   margin-top: 100px;
   background-color: white;
-  height: 400px;
+  height: 450px;
   display: grid;
   grid-template-areas:
     "user first last"
@@ -30,7 +30,7 @@ export const UpdateInfo = styled.form`
     "save things things";
 
   grid-template-columns: minmax(280px, 25%) repeat(2, 1fr);
-  grid-template-rows: repeat(6, 1fr);
+  grid-template-rows: repeat(5, 1fr);
 `;
 
 export const UserDiv = styled(DefaultDiv)`

@@ -19,9 +19,11 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-slick": "^0.26.1",
     "react-spinners": "^0.8.3",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "slick-carousel": "^1.8.1",
     "styled-components": "^5.1.1",
     "unique-random": "^2.1.0"
   },

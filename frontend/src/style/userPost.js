@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { DefaultDiv, DropDown } from "./navs";
+import {DefaultDiv, DropDown} from "./navs";
 
-import { DefaultAvaSmall } from "./images";
+import {DefaultAvaSmall} from "./images";
 import UserPostMenu from "../assets/svgs/menu.svg";
 import heart from "../assets/heartSmall.png";
 import share from "../assets/svgs/share.svg";
@@ -44,15 +44,15 @@ export const UserPostMenuDiv = styled(DefaultDiv)`
   grid-area: dots;
 `;
 export const UserPostTextDiv = styled(DefaultDiv)`
+  justify-content: flex-start;
+  padding: 0 1rem 0 1rem;
   grid-area: c;
 `;
 export const UserPostImageDiv = styled(DefaultDiv)`
   grid-area: i;
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-template-rows: auto auto;
-  grid-gap: 10px;
+
 `;
+
 export const UserPostLikeShareDiv = styled(DefaultDiv)`
   justify-content: space-evenly;
   grid-area: like;
@@ -75,7 +75,9 @@ export const UserPostMenuImg = styled.img`
   cursor: pointer;
 `;
 
-export const UserPostText = styled.p``;
+export const UserPostText = styled.p`
+  white-space: pre-line;
+`;
 
 export const UserPostLikeImg = styled.img`
   width: 22px;
@@ -95,6 +97,7 @@ export const UserPostShareImg = styled.img`
 `;
 
 export const PostDropDown = styled.div`
+z-index: 3;
   top: 40px;
   position: relative;
   left: 100%;

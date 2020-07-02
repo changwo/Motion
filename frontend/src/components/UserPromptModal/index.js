@@ -28,7 +28,7 @@ export const ErrorMessage = styled.p`
 
 const UserPromptModal = (props) => {
     const {
-        errorReducer:{createPostError},
+        errorReducer: {createPostError},
         handleCloseModal,
         userReducer: {first_name, last_name, avatar},
     } = props;
@@ -44,22 +44,17 @@ const UserPromptModal = (props) => {
         e.preventDefault();
         const form = new FormData()
         form.append('content', postInfo.content)
-        // form.append('images', postInfo.images)
         if (postInfo.images) {
-            for (let key in postInfo.images) {
-                form.append(`images`, postInfo.images[key])
+            for (const file of postInfo.images) {
+                form.append('images', file)
             }
         }
         const response = await dispatch(createPostAction(form));
         if (response.status === 201) {
-            setPostInfo({
-                content: ``,
-                images: null,
-                imageUrls: null,
-            });
             handleCloseModal();
         }
-    };
+    }
+
 
     const handleContent = (event) => {
         const value = event.currentTarget.value;
@@ -72,7 +67,6 @@ const UserPromptModal = (props) => {
         setPostInfo({...postInfo, images: files, imageUrls: urls})
     }
 
-    console.log("postInfo", postInfo)
 
     return (
         <UserPromptModalContainer>
@@ -96,7 +90,7 @@ const UserPromptModal = (props) => {
                 </UPMCloseBUttonDiv>
                 <UPMInputDiv>
                     <ErrorMessage>{createPostError ? `${createPostError} is invalid` : null}</ErrorMessage>
-                    <UPMInputBox onChange={handleContent}></UPMInputBox>
+                    <UPMInputBox placeholder={`Whats on your mind ${first_name}?`} rows={10} onChange={handleContent}/>
                 </UPMInputDiv>
                 <UPMButtonDiv>
                     <UPMButtonOuter onClick={onSubmitHandler}>
@@ -110,18 +104,19 @@ const UserPromptModal = (props) => {
                            type="file"/>
                 </UPMAttachImgDiv>
                 <UPMDisplayImgDiv>
-                    {postInfo.imageUrls ? postInfo.imageUrls.map((url, index) => <UPMDisplayImg key={index}
-                                                                                                src={url}/>) : null}
+                    {postInfo.imageUrls ? postInfo.imageUrls.map((url, index) => <UPMDisplayImg key={index} src={url}/>) : null}
                 </UPMDisplayImgDiv>
             </UPModalBox>
         </UserPromptModalContainer>
     );
-};
+}
 
 const mapStateToProps = (state) => {
+
     return {
         errorReducer: state.errorReducer,
         userReducer: state.userReducer,
+        postReducer: state.postReducer,
     };
 };
 export default connect(mapStateToProps)(UserPromptModal);

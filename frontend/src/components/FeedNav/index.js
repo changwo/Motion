@@ -23,8 +23,9 @@ import {
     MenuImg,
     DropDown,
 } from "../../style/navs";
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {GET_ALL_USERS, USER_LOGOUT} from "../../store/types";
+import {DefaultAvaSmall, PlaceholderS} from "../../style/images";
 
 
 const FeedNav = (props) => {
@@ -32,7 +33,7 @@ const FeedNav = (props) => {
         window.location.reload(false);
     };
     const {
-        userReducer: { avatar},
+        userReducer: {avatar, first_name, last_name},
     } = props;
 
     // useEffect(() => {
@@ -84,7 +85,18 @@ const FeedNav = (props) => {
                 <NotifCount>3</NotifCount>
             </NotifDiv>
             <AvaDiv>
-                <UserImg src={avatar}/>
+                {avatar ? (
+                    <Link to={`/profile`}>
+                        <DefaultAvaSmall src={avatar}/>
+                    </Link>
+                ) : (
+                    <Link to={`/profile`}>
+                        <PlaceholderS>
+                            {first_name ? first_name[0].toUpperCase() : "?"}
+                            {last_name ? last_name[0].toUpperCase() : null}
+                        </PlaceholderS>
+                    </Link>
+                )}
             </AvaDiv>
             <SettDiv>
                 {isDropDown ? renderDropDown : null}

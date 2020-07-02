@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 import {connect} from "react-redux";
 
 import {XLAva, PlaceholderxL} from "../../style/images";
 
 import {
-
     Followers,
     Following,
     User,
@@ -17,7 +16,6 @@ import {
     Posts,
     ThingsLikedBox,
     LikeItem,
-
     UserProfileInfo,
     PostsButton,
 } from "../../style/profilePage";
@@ -32,10 +30,10 @@ import UserPostsRender from "../UserPostsRender";
 import {followUserProfileAction, friendRequestProfileAction} from "../../store/actions/userProfileAction";
 
 
+
 const UserProfileBox = (props) => {
     const {
         dispatch,
-        authReducer: {token},
         userProfileReducer: {
             about_me,
             amount_following,

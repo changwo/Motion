@@ -6,7 +6,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import {
     UserPostContainer,
     UserPostAvaDiv,
-    UserPostUserImg,
     UserPostNameTimeDiv,
     UserPostBlack,
     UserPostGrey,
@@ -14,12 +13,11 @@ import {
     UserPostMenuImg,
     UserPostTextDiv,
     UserPostText,
-    UserPostImageDiv,
     UserPostLikeShareDiv,
     UserPostLikeCountDiv,
     UserPostLikeImg,
     UserPostShareImg,
-    PostDropDown, ActiveLikeImg,
+    PostDropDown, ActiveLikeImg, UserPostImageDiv,
 } from "../../style/userPost";
 import editPic from "../../assets/png-edit.png";
 import deletePic from "../../assets/png-delete.png";
@@ -29,6 +27,8 @@ import {DefaultAvaSmall, PlaceholderS} from "../../style/images";
 import {Link} from "react-router-dom";
 import {likePostAction} from "../../store/actions/postAction";
 import {useDispatch} from "react-redux";
+import ProfileCard from "../ProfileCard";
+import Carousel from "../Carousel";
 
 const UserPost = (props) => {
     const dispatch = useDispatch()
@@ -47,6 +47,7 @@ const UserPost = (props) => {
         handlePostDelete(e);
     };
 
+
     const {
         postTypeCode,
         handlePostDelete,
@@ -57,13 +58,15 @@ const UserPost = (props) => {
             amount_of_likes,
             logged_in_user_liked,
             content,
+            images,
             user: {first_name, last_name, avatar},
         },
     } = props;
-        const handleLike = (e) => {
+    const handleLike = (e) => {
         const ID = Number(e.currentTarget.id);
         dispatch(likePostAction(ID, postTypeCode));
     };
+
     const timeAgo = dayjs(created).fromNow();
     const renderDropDown = (
         <PostDropDown>
@@ -86,50 +89,52 @@ const UserPost = (props) => {
         <UserEditModal index={index} handleCloseModal={handleCloseModal}/>
     );
     return (
-        <UserPostContainer>
-            {isModal ? modal : null}
-            <UserPostAvaDiv>
-                {avatar ? (
-                    <Link to={`/profile`}>
-                        <DefaultAvaSmall src={avatar}/>
-                    </Link>
-                ) : (
-                    <Link to={`/profile`}>
-                        <PlaceholderS>
-                            {first_name ? first_name[0].toUpperCase() : "?"}
-                            {last_name ? last_name[0].toUpperCase() : null}
-                        </PlaceholderS>
-                    </Link>
-                )}
-            </UserPostAvaDiv>
-            <UserPostNameTimeDiv>
-                <UserPostBlack>
-                    {first_name} {last_name}
-                </UserPostBlack>
-                <UserPostGrey>{timeAgo}</UserPostGrey>
-            </UserPostNameTimeDiv>
-            {isDropDown ? renderDropDown : null}
-            <UserPostMenuDiv>
-                <UserPostMenuImg onClick={handleToggle} id={id}/>
-            </UserPostMenuDiv>
-            <UserPostTextDiv>
-                <UserPostText>{content}</UserPostText>
-            </UserPostTextDiv>
-            <UserPostImageDiv></UserPostImageDiv>
-            <UserPostLikeShareDiv>
-                {logged_in_user_liked ? (
-                    <ActiveLikeImg id={id} onClick={handleLike}/>
-                ) : (
-                    <UserPostLikeImg id={id} onClick={handleLike}/>
-                )}
-                <UserPostText>Like</UserPostText>
-                <UserPostShareImg/>
-                <UserPostText>Share</UserPostText>
-            </UserPostLikeShareDiv>
-            <UserPostLikeCountDiv>
-                <UserPostText>{amount_of_likes} likes</UserPostText>
-            </UserPostLikeCountDiv>
-        </UserPostContainer>
+        <>
+            <UserPostContainer>
+                {isModal ? modal : null}
+                <UserPostAvaDiv>
+                    {avatar ? (
+                        <Link to={`/profile`}>
+                            <DefaultAvaSmall src={avatar}/>
+                        </Link>
+                    ) : (
+                        <Link to={`/profile`}>
+                            <PlaceholderS>
+                                {first_name ? first_name[0].toUpperCase() : "?"}
+                                {last_name ? last_name[0].toUpperCase() : null}
+                            </PlaceholderS>
+                        </Link>
+                    )}
+                </UserPostAvaDiv>
+                <UserPostNameTimeDiv>
+                    <UserPostBlack>
+                        {first_name} {last_name}
+                    </UserPostBlack>
+                    <UserPostGrey>{timeAgo}</UserPostGrey>
+                </UserPostNameTimeDiv>
+                {isDropDown ? renderDropDown : null}
+                <UserPostMenuDiv>
+                    <UserPostMenuImg onClick={handleToggle} id={id}/>
+                </UserPostMenuDiv>
+                <UserPostTextDiv>
+                    <UserPostText>{content}</UserPostText>
+                </UserPostTextDiv>
+                <UserPostImageDiv>{images.length? <Carousel images={images}/> : null}</UserPostImageDiv>
+                <UserPostLikeShareDiv>
+                    {logged_in_user_liked ? (
+                        <ActiveLikeImg id={id} onClick={handleLike}/>
+                    ) : (
+                        <UserPostLikeImg id={id} onClick={handleLike}/>
+                    )}
+                    <UserPostText>Like</UserPostText>
+                    <UserPostShareImg/>
+                    <UserPostText>Share</UserPostText>
+                </UserPostLikeShareDiv>
+                <UserPostLikeCountDiv>
+                    <UserPostText>{amount_of_likes} likes</UserPostText>
+                </UserPostLikeCountDiv>
+            </UserPostContainer>
+        </>
     );
 };
 

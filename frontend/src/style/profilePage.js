@@ -121,7 +121,7 @@ export const ThingsLikedBox = styled.div`
 `;
 
 export const LikeItem = styled.div`
-  background-color: ${(props) => props.theme.athensGray};
+  background-color: ${(props) => props.theme.galleryGray};
   margin: 4px;
   padding: 5px 10px;
   border-radius: 30px;

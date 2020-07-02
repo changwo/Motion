@@ -58,7 +58,7 @@ export const createPostAction = data => async (dispatch, getState) => {
 
     try {
 
-        const response = await Axios.post('/social/posts/', data, );
+        const response = await Axios.post('/social/posts/', data,);
         console.log("response", response.data)
         dispatch(addPostToList(response.data))
         dispatch(resetError('createPostError'))
@@ -79,17 +79,15 @@ export const updatePostInList = (post) => {
 }
 
 export const updatePostAction = (data, postID) => async (dispatch) => {
-    const formData = new FormData();
-    formData.set("content", data.content);
-    formData.set("images", data.images);
-    formData.set("shared", data.shared);
+    console.log("Edit Data:  ",{...data});
     try {
-        const response = await Axios.patch(`social/posts/${postID}/`, formData);
-        console.log("response data", response.data)
+        const response = await Axios.patch(`social/posts/${postID}/`, data);
+        console.log("In the update post, response data", response.data)
         dispatch(updatePostInList(response.data))
         return response
     } catch (error) {
-        console.log(`Updating Error Content: ${error.response.data.content.join(' ')}`)
+        console.log(`error:`, error)
+        return error
     }
 }
 

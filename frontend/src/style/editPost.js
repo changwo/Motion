@@ -5,15 +5,16 @@ import { DefaultAvaSmall } from "./images";
 import UserPostMenu from "../assets/svgs/menu.svg";
 import heart from "../assets/svgs/heart.svg";
 import share from "../assets/svgs/share.svg";
+import attachImg from "../assets/attach-pic.png";
 
-export const UserPostContainer = styled.form`
+export const EditPostContainer = styled.form`
   display: grid;
   padding: 20px;
   grid-template-areas:
     "a nameTime .  dots"
     "c c c c"
     "i i i i"
-    ". like like likeCount";
+    "U like like likeCount";
   grid-template-columns: minmax(60px, 5%) minmax(150px, 1fr) 1fr minmax(
       60px,
       5%
@@ -25,7 +26,8 @@ export const UserPostContainer = styled.form`
   border-radius: ${(props) => props.theme.borderRadius};
   box-shadow: ${(props) => props.theme.boxShadow};
   min-width: 375px;
-  max-width: 700px;
+  width: 800px;
+  height: 450px;
   position: absolute;
   top: 30%;
   left: 30%;
@@ -36,6 +38,9 @@ export const UserPostContainer = styled.form`
 
 export const UserPostAvaDiv = styled(DefaultDiv)`
   grid-area: a;
+`;
+export const AttachImgiv = styled(DefaultDiv)`
+  grid-area: U;
 `;
 export const UserPostNameTimeDiv = styled(DefaultDiv)`
   width: 100%;
@@ -50,12 +55,10 @@ export const UserPostMenuDiv = styled(DefaultDiv)`
 export const UserPostTextDiv = styled(DefaultDiv)`
   grid-area: c;
 `;
-export const UserPostImageDiv = styled(DefaultDiv)`
+export const EditPostImageDiv = styled(DefaultDiv)`
   grid-area: i;
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-template-rows: auto auto;
-  grid-gap: 10px;
+  display: flex;
+  justify-content: space-around;
 `;
 export const UserPostLikeShareDiv = styled(DefaultDiv)`
   justify-content: center;
@@ -87,6 +90,22 @@ export const UserPostText = styled.textarea`
   border: none;
   width: 100%;
   height: 200px;
+`;
+
+export const EditPostDisplayImg = styled.img`
+  border-radius: 4px;
+  margin: 0 0.3rem 0 0.3rem;
+
+  cursor: pointer;
+  width: 80px;
+  height: 80px;
+`;
+
+export const EditPostAttachImg = styled.img`
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  content: url(${attachImg});
 `;
 
 export const UserPostLikeImg = styled.img`

@@ -26,6 +26,7 @@ import {PlaceholderS} from "../../style/images";
 import {likePostAction} from "../../store/actions/postAction";
 import {Link} from "react-router-dom";
 import {likeProfilePostsAction} from "../../store/actions/userProfileAction";
+import Carousel from "../Carousel";
 
 const NonUserPost = (props) => {
     const dispatch = useDispatch();
@@ -35,6 +36,7 @@ const NonUserPost = (props) => {
         post: {
             shared,
             id,
+            images,
             created,
             logged_in_user_liked,
             amount_of_likes,
@@ -82,7 +84,7 @@ const NonUserPost = (props) => {
             <UserPostTextDiv>
                 <UserPostText>{content}</UserPostText>
             </UserPostTextDiv>
-            <UserPostImageDiv></UserPostImageDiv>
+            <UserPostImageDiv>{images.length? <Carousel images={images}/> : null}</UserPostImageDiv>
             <UserPostLikeShareDiv>
                 {logged_in_user_liked ? (
                     <ActiveLikeImg id={id} onClick={handleLike}/>

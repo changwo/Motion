@@ -86,7 +86,7 @@ export const UPMAttachImgDiv = styled(DefaultDiv)`
 
 export const UPMDisplayImgDiv = styled(DefaultDiv)`
   grid-area: image;
-  justify-content: space-between;
+  justify-content: space-around;
   overflow: auto;
 `;
 

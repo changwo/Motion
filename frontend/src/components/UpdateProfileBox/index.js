@@ -47,8 +47,13 @@ const AvatarLabel = styled.label`
 `
 const AvatarInput = styled.input`
   display: none;
-  
 `
+
+const ThingsULikeInput = styled.input`
+  display: flex;
+  width: 100%;
+`
+
 const UpdateProfileBox = (props) => {
     const {push} = useHistory();
     const {
@@ -63,7 +68,6 @@ const UpdateProfileBox = (props) => {
             last_name,
             location,
             things_user_likes,
-            id,
         },
     } = props;
 
@@ -75,10 +79,12 @@ const UpdateProfileBox = (props) => {
         location: `${location}`,
         about_me: `${about_me}`,
         things_user_likes: `${things_user_likes}`,
-        avatar: ``,
-        avatarUrl: ``
+        avatar: null,
+        avatarUrl: ``,
+        banner: null,
+        bannerUrl: ``
     });
-    // console.log("UpdateProfileBox -> userInfo", userInfo);
+
 
     const onChangeHandler = (event, property) => {
         const value = event.currentTarget.value;
@@ -94,21 +100,29 @@ const UpdateProfileBox = (props) => {
         form.append('username', userInfo.username)
         form.append('location', userInfo.location)
         form.append('about_me', userInfo.about_me)
-        form.append('things_user_likes', userInfo.things_user_likes)
-        form.append('avatar', userInfo.avatar)
-
+        if (userInfo.things_user_likes.length) {
+            userInfo.things_user_likes.split(",").forEach((el, ind) => {
+                form.append(`things_user_likes[${ind}]`, el)
+            })
+        }
+        if (userInfo.avatar) {
+            form.append('avatar', userInfo.avatar)
+        }
+        if (userInfo.banner) {
+            form.append('banner', userInfo.banner)
+        }
         const response = await dispatch(updateUserAction(form));
         if (response.status === 200) push("/profile");
     };
 
     const avatarSelectHandler = e => {
-        let file = e.target.files[0];
-        let reader = new FileReader();
-        if (file) {
-            reader.readAsDataURL(file);
-            reader.onloadend = function (e) {
-                setUserInfo({...userInfo, avatarUrl: reader.result, avatar: file})
-            }
+        if (e.target.files[0]) {
+            setUserInfo({...userInfo, avatarUrl: URL.createObjectURL(e.target.files[0]), avatar: e.target.files[0]})
+        }
+    }
+    const bannerSelectHandler = e => {
+        if (e.target.files[0]) {
+            setUserInfo({...userInfo, bannerUrl: URL.createObjectURL(e.target.files[0]), banner: e.target.files[0]})
         }
     }
 
@@ -118,7 +132,7 @@ const UpdateProfileBox = (props) => {
             <ErrorMessage>{updatePostError ? `${updatePostError} is invalid` : null}</ErrorMessage>
             <UpdateInfo>
 
-                <Banner src={banner}/>
+                {userInfo.bannerUrl.length ? <Banner src={userInfo.bannerUrl}/> : <Banner src={banner}/>}
                 <UserDiv>
                     {
                         userInfo.avatarUrl.length ? (
@@ -130,8 +144,10 @@ const UpdateProfileBox = (props) => {
                             </PlaceholderxL>
                         ))
                     }
-                    <AvatarLabel htmlFor="hiddenFileInput">Upload Avatar</AvatarLabel>
-                    <AvatarInput id="hiddenFileInput" accept={"image/*"} onChange={avatarSelectHandler} type="file"/>
+                    <AvatarLabel htmlFor="avatar">Upload Avatar</AvatarLabel>
+                    <AvatarInput id="avatar" accept={"image/*"} onChange={avatarSelectHandler} type="file"/>
+                    <AvatarLabel htmlFor="banner">Upload Banner</AvatarLabel>
+                    <AvatarInput id="banner" accept={"image/*"} onChange={bannerSelectHandler} type="file"/>
                 </UserDiv>
                 <SaveDiv>
                     <SaveButton onClick={handleSubmit}>SAVE</SaveButton>
@@ -191,8 +207,8 @@ const UpdateProfileBox = (props) => {
                     />
                 </AboutDiv>
                 <ThingsDiv>
-                    <p>About:</p>
-                    <input
+                    <p>Things I like:</p>
+                    <ThingsULikeInput
                         onChange={(e) => onChangeHandler(e, "things_user_likes")}
                         placeholder="Add things you like separated by spaces..."
                         defaultValue={things_user_likes}

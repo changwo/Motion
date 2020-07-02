@@ -16,6 +16,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { store } from "./store";
 import UpdateProfile from "./routes/UpdateProfile";
 import {setLoggedInUser} from "./store/actions/userAction";
+import Carousel from "./components/Carousel";
 
 if (localStorage.getItem("token")) {
   const token = localStorage.getItem("token");
@@ -33,6 +34,7 @@ ReactDOM.render(
       <Router>
         <Switch>
           <Route exact path="/" component={Home} />
+          {/*<Route exact path="/test" component={Carousel} />*/}
           <Route exact path="/feed" component={authComponent(Feed)} />
           <Route exact path="/friends" component={authComponent(Friends)} />
           <Route exact path="/profile" component={authComponent(Profile)} />

@@ -191,6 +191,7 @@ const ProfileBox = (props) => {
 };
 
 const mapStateToProps = (state) => {
+    console.log("state ", state)
     return {
         authReducer: state.authReducer,
         userReducer: state.userReducer,

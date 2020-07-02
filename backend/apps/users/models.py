@@ -21,7 +21,7 @@ class User(AbstractUser):
 
     about_me = models.CharField(blank=True, max_length=2000)
 
-    things_user_likes = ArrayField(models.CharField(max_length=200), default=list, blank=True)
+    things_user_likes = ArrayField(models.CharField(max_length=100, blank=True, null=True), blank=True, null=True)
 
     avatar = models.ImageField(null=True, blank=True)
 
