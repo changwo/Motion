@@ -1,22 +1,17 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {connect} from "react-redux";
 import {
     ProfilePostsContainer,
     ProfilePostsLeft,
     ProfilePostsRight,
 } from "../../style/profilePosts";
-import NonUserPost from "../NonUserPost";
-import {getUserProfilePostsAction, resetUserProfilePosts} from "../../store/actions/userProfileAction";
+
 import PurpleSpinner from "../../spinners";
 import UserPost from "../UserPost";
 
 const UserPostsRender = (props) => {
     const {
-        authReducer: {token},
-        userProfileReducer: {id},
         userPostsReducer: {postList},
-        dispatch,
-        currentList,
     } = props;
 
 
@@ -26,7 +21,7 @@ const UserPostsRender = (props) => {
         renderLeft = postList.map((post, index) => {
             if (index % 2 !== 0) {
                 return (
-                    <NonUserPost token={token} index={index} post={post} key={index} postTypeCode={4}/> // postTypeCode={4} is for posts on another user's profile page
+                    <UserPost index={index} post={post} key={index} postTypeCode={4}/> // postTypeCode={4} is for posts on another user's profile page
                 );
             }
         });
@@ -37,7 +32,7 @@ const UserPostsRender = (props) => {
         renderRight = postList.map((post, index) => {
             if (index % 2 === 0) {
                 return (
-                    <NonUserPost token={token} index={index} post={post} key={index} postTypeCode={4}/> // postTypeCode={4} is for posts on another user's profile page
+                    <UserPost  index={index} post={post} key={index} postTypeCode={4}/> // postTypeCode={4} is for posts on another user's profile page
                 );
             }
         });
@@ -54,11 +49,7 @@ const UserPostsRender = (props) => {
 const mapStateToProps = (state) => {
 
     return {
-        authReducer: state.authReducer,
-        userReducer: state.userReducer,
-        registration: state.registrationReducer,
         userPostsReducer: state.userPostsReducer,
-        userProfileReducer: state.userProfileReducer,
     };
 };
 export default connect(mapStateToProps)(UserPostsRender);

@@ -2,14 +2,14 @@ from django.shortcuts import render
 
 # Create your views here.
 from rest_framework import status
-from rest_framework.generics import ListCreateAPIView, ListAPIView
+from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from apps.comments.models import Comment
+from apps.comments.permissions import IsCommenterOrAdminOrReadOnly
 from apps.comments.serializers import CommentSerializer
 from apps.posts.models import Post
-from apps.posts.serializers import CreatePostSerializer
 from apps.users.permissions import ReadOnly
 
 
@@ -41,3 +41,10 @@ class CreateOrGetPostCommentsView(ListCreateAPIView):
         post = self.get_object()
         serializer.save(userProfile=self.request.user.userprofile, post=post)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class RetrieveUpdateDestroyCommentView(RetrieveUpdateDestroyAPIView):
+    serializer_class = CommentSerializer
+    permission_classes = [IsCommenterOrAdminOrReadOnly]
+    queryset = Comment
+    lookup_url_kwarg = 'comment_id'

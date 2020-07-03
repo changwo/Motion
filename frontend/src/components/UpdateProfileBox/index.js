@@ -53,6 +53,9 @@ const ThingsULikeInput = styled.input`
   display: flex;
   width: 100%;
 `
+const BoldP = styled.p`
+  font-weight: bold;
+`
 
 const UpdateProfileBox = (props) => {
     const {push} = useHistory();
@@ -157,7 +160,7 @@ const UpdateProfileBox = (props) => {
                 </DeleteDiv>
 
                 <FristNameDiv>
-                    <p>First Name:</p>
+                    <BoldP>First Name:</BoldP>
                     <input
                         onChange={(e) => onChangeHandler(e, "first_name")}
                         placeholder="Enter first name"
@@ -167,7 +170,7 @@ const UpdateProfileBox = (props) => {
                     />
                 </FristNameDiv>
                 <LastNameDiv>
-                    <p>Last Name:</p>
+                    <BoldP>Last Name:</BoldP>
                     <input
                         onChange={(e) => onChangeHandler(e, "last_name")}
                         placeholder="Enter last name"
@@ -177,7 +180,7 @@ const UpdateProfileBox = (props) => {
                     />
                 </LastNameDiv>
                 <UserNameDiv>
-                    <p>Username:</p>
+                    <BoldP>Username:</BoldP>
                     <input
                         onChange={(e) => onChangeHandler(e, "username")}
                         placeholder="Enter username"
@@ -187,7 +190,7 @@ const UpdateProfileBox = (props) => {
                     />
                 </UserNameDiv>
                 <LocationDiv>
-                    <p>Location:</p>
+                    <BoldP>Location:</BoldP>
                     <input
                         onChange={(e) => onChangeHandler(e, "location")}
                         placeholder="Enter location"
@@ -197,20 +200,19 @@ const UpdateProfileBox = (props) => {
                     />
                 </LocationDiv>
                 <AboutDiv>
-                    <p>About:</p>
-                    <input
+                    <BoldP>About:</BoldP>
+                    <textarea
                         onChange={(e) => onChangeHandler(e, "about_me")}
                         placeholder="About you"
                         defaultValue={about_me}
-                        type="text"
-                        required
+                        rows={10}
                     />
                 </AboutDiv>
                 <ThingsDiv>
-                    <p>Things I like:</p>
+                    <BoldP>Things I like:</BoldP>
                     <ThingsULikeInput
                         onChange={(e) => onChangeHandler(e, "things_user_likes")}
-                        placeholder="Add things you like separated by spaces..."
+                        placeholder="Add things you like separated by comas..."
                         defaultValue={things_user_likes}
                         type="text"
                     /></ThingsDiv>

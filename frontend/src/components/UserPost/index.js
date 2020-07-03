@@ -1,11 +1,10 @@
-import React, {useState} from "react";
-
+import React, {useEffect, useState} from "react";
+import styled from "styled-components";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import {
     UserPostContainer,
-    UserPostAvaDiv,
     UserPostNameTimeDiv,
     UserPostBlack,
     UserPostGrey,
@@ -17,24 +16,69 @@ import {
     UserPostLikeCountDiv,
     UserPostLikeImg,
     UserPostShareImg,
-    PostDropDown, ActiveLikeImg, UserPostImageDiv,
+    PostDropDown, ActiveLikeImg, UserPostImageDiv, AmountCommentsDiv,
 } from "../../style/userPost";
 import editPic from "../../assets/png-edit.png";
 import deletePic from "../../assets/png-delete.png";
 
 import UserEditModal from "../UserEditModal";
-import {DefaultAvaSmall, PlaceholderS} from "../../style/images";
 import {Link} from "react-router-dom";
-import {likePostAction} from "../../store/actions/postAction";
+import {
+    createCommentAction,
+    deleteCommentAction,
+    getCommentsAction,
+    getPostsAction,
+    likePostAction
+} from "../../store/actions/postAction";
 import {useDispatch} from "react-redux";
-import ProfileCard from "../ProfileCard";
 import Carousel from "../Carousel";
+import {likeProfilePostsAction} from "../../store/actions/userProfileAction";
+import Avatar from "./Avatar";
+import Comments from "./Comments";
 
+
+const PostLink = styled(Link)`
+
+`
+
+const CommentLink = styled.a`
+  cursor: pointer;
+`
 const UserPost = (props) => {
+    const {
+        postTypeCode,
+        handlePostDelete,
+        index,
+        post: {
+            id,
+            created,
+            amount_of_likes,
+            logged_in_user_liked,
+            is_from_logged_in_user,
+            amount_of_comments,
+            content,
+            images,
+            user: {first_name, last_name, avatar, id:userID},
+        },
+    } = props;
+
     const dispatch = useDispatch()
     dayjs.extend(relativeTime);
     const [isDropDown, toggleDropDown] = useState(false);
     const [isModal, setUPModal] = useState(false);
+    const [commentsData, setComments] = useState({
+        showComments: false,
+        commentsList: null,
+        content: ``,
+    })
+    const handleDeleteComment = (e) => {
+        const ID = Number(e.currentTarget.id)
+        dispatch(deleteCommentAction(ID))
+        const newCommentsList = commentsData.commentsList
+        const updatedComments = newCommentsList.filter(comment => comment.id !== ID)
+        setComments({...commentsData, commentsList: updatedComments})
+    };
+
     const handleCloseModal = () => {
         setUPModal(!isModal);
     };
@@ -48,24 +92,44 @@ const UserPost = (props) => {
     };
 
 
-    const {
-        postTypeCode,
-        handlePostDelete,
-        index,
-        post: {
-            id,
-            created,
-            amount_of_likes,
-            logged_in_user_liked,
-            content,
-            images,
-            user: {first_name, last_name, avatar},
-        },
-    } = props;
     const handleLike = (e) => {
         const ID = Number(e.currentTarget.id);
-        dispatch(likePostAction(ID, postTypeCode));
+        if (postTypeCode === 4) {
+            dispatch(likeProfilePostsAction(ID));
+        } else {
+            dispatch(likePostAction(ID, postTypeCode));
+        }
     };
+
+    const handleRenderComments = async (e) => {
+        if (commentsData.showComments === false) {
+            const response = await dispatch(getCommentsAction(id))
+            setComments({
+                ...commentsData, commentsList: response.data,
+                showComments: !commentsData.showComments
+            })
+        } else {
+            setComments({
+                showComments: false,
+                commentsList: null,
+                content: ``,
+            })
+        }
+    }
+    console.log(commentsData)
+
+    const handleNewComment = e => {
+        const value = e.currentTarget.value;
+        setComments({...commentsData, content: value});
+    }
+
+    const submitComment = async (e) => {
+        e.preventDefault();
+        console.log("in the submit!")
+        const response = await dispatch(createCommentAction(id, {content: commentsData.content}))
+        setComments({...commentsData, commentsList: [response.data, ...commentsData.commentsList], content: ``})
+
+    }
 
     const timeAgo = dayjs(created).fromNow();
     const renderDropDown = (
@@ -76,11 +140,11 @@ const UserPost = (props) => {
                     handleCloseModal();
                 }}
             >
-                <img src={editPic}/>
+                <img src={editPic} alt={"edit post"}/>
                 Edit
             </button>
             <button className={index} id={id} onClick={handleCloseDropDown}>
-                <img src={deletePic}/>
+                <img alt={"delete post"} src={deletePic}/>
                 Delete
             </button>
         </PostDropDown>
@@ -92,20 +156,8 @@ const UserPost = (props) => {
         <>
             <UserPostContainer>
                 {isModal ? modal : null}
-                <UserPostAvaDiv>
-                    {avatar ? (
-                        <Link to={`/profile`}>
-                            <DefaultAvaSmall src={avatar}/>
-                        </Link>
-                    ) : (
-                        <Link to={`/profile`}>
-                            <PlaceholderS>
-                                {first_name ? first_name[0].toUpperCase() : "?"}
-                                {last_name ? last_name[0].toUpperCase() : null}
-                            </PlaceholderS>
-                        </Link>
-                    )}
-                </UserPostAvaDiv>
+                <Avatar first_name={first_name} last_name={last_name} avatar={avatar}
+                        is_from_logged_in_user={is_from_logged_in_user} id={userID}/>
                 <UserPostNameTimeDiv>
                     <UserPostBlack>
                         {first_name} {last_name}
@@ -114,12 +166,12 @@ const UserPost = (props) => {
                 </UserPostNameTimeDiv>
                 {isDropDown ? renderDropDown : null}
                 <UserPostMenuDiv>
-                    <UserPostMenuImg onClick={handleToggle} id={id}/>
+                    {is_from_logged_in_user ? <UserPostMenuImg onClick={handleToggle} id={id}/> : null}
                 </UserPostMenuDiv>
                 <UserPostTextDiv>
                     <UserPostText>{content}</UserPostText>
                 </UserPostTextDiv>
-                <UserPostImageDiv>{images.length? <Carousel images={images}/> : null}</UserPostImageDiv>
+                <UserPostImageDiv>{images.length ? <Carousel images={images}/> : null}</UserPostImageDiv>
                 <UserPostLikeShareDiv>
                     {logged_in_user_liked ? (
                         <ActiveLikeImg id={id} onClick={handleLike}/>
@@ -130,9 +182,16 @@ const UserPost = (props) => {
                     <UserPostShareImg/>
                     <UserPostText>Share</UserPostText>
                 </UserPostLikeShareDiv>
+                <AmountCommentsDiv><CommentLink onClick={handleRenderComments}>
+                    <p>{amount_of_comments ? `${amount_of_comments} Comments` : "Be the first to comment"}</p>
+                </CommentLink></AmountCommentsDiv>
                 <UserPostLikeCountDiv>
                     <UserPostText>{amount_of_likes} likes</UserPostText>
                 </UserPostLikeCountDiv>
+                {commentsData.showComments ?
+                    <Comments handleDeleteComment={handleDeleteComment} content={commentsData.content} id={id} submitComment={submitComment}
+                              handleNewComment={handleNewComment}
+                              comments={commentsData.commentsList}/> : null}
             </UserPostContainer>
         </>
     );

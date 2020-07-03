@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {DefaultDiv, DropDown} from "./navs";
+import {DefaultDiv} from "./navs";
 
 import {DefaultAvaSmall} from "./images";
 import UserPostMenu from "../assets/svgs/menu.svg";
@@ -13,7 +13,8 @@ export const UserPostContainer = styled.div`
     "a nameTime .  dots"
     "c c c c"
     "i i i i"
-    "like like . likeCount";
+    "like like commentCount likeCount"
+    "comments comments comments comments";
   grid-template-columns: minmax(60px, 5%) minmax(150px, 1fr) 1fr minmax(
       60px,
       5%
@@ -21,7 +22,7 @@ export const UserPostContainer = styled.div`
   grid-template-rows: minmax(60px, 5%) minmax(10px, auto) minmax(0, auto) minmax(
       60px,
       5%
-    );
+    ) minmax(0, auto);
   border-radius: ${(props) => props.theme.borderRadius};
   box-shadow: ${(props) => props.theme.boxShadow};
   width: 100%;
@@ -31,9 +32,16 @@ export const UserPostContainer = styled.div`
 `;
 // DefaultAvaSmall
 
+
 export const UserPostAvaDiv = styled(DefaultDiv)`
   grid-area: a;
 `;
+
+export const AmountCommentsDiv = styled(DefaultDiv)`
+  grid-area: commentCount;
+  
+`;
+
 export const UserPostNameTimeDiv = styled(DefaultDiv)`
   width: 100%;
   flex-direction: column;
@@ -125,3 +133,4 @@ z-index: 3;
     }
   }
 `;
+

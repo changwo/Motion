@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, connect } from "react-redux";
 
 import { sendCode, validate } from "../../store/actions/signUpAction";
 
-import { BlackP, ValiP, LoginP, LoginGrey } from "../../style/paragraphs";
-import { SignInH1, ErrorHeader, Title, LoginH1 } from "../../style/headers";
-import { InputFieldsForm, LoginField } from "../../style/forms";
+import { ValiP, LoginP, LoginGrey } from "../../style/paragraphs";
+import {  ErrorHeader, Title, LoginH1 } from "../../style/headers";
+import {  LoginField } from "../../style/forms";
 import {
   InputWrapper,
   Column,
-  CircleDiv,
   VeriCode,
   Email,
   Username,
@@ -18,19 +17,17 @@ import {
   Password1,
   Password2,
   Button,
-  InputFields,
   LoginCricle,
 } from "../../style/divs";
 import {
   UserIcon,
-  PassIcon,
   CheckMark,
   Ellipsis1,
   Ellipsis2,
   Ellipsis3,
 } from "../../style/images";
 import { DefaulInput } from "../../style/inputs";
-import { ColoredButton, ThemedB, LoginB, DefaultButton } from "../../style/buttons";
+import { ColoredButton, ThemedB} from "../../style/buttons";
 import {
   VeriContainer,
   SignUpPageContainer,

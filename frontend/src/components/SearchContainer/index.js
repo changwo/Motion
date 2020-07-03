@@ -13,56 +13,41 @@ import {getProfilesAction} from "../../store/actions/profileAction";
 
 const SearchContainer = (props) => {
     const {
-        searchReducer: {searchList},
         profileReducer: {allUsersList},
-        authReducer: {token},
-        userReducer: {id, email, first_name, last_name, avatar},
-        postReducer: {userPosts, friendPosts, followingPosts},
+        userReducer: {id},
         dispatch,
-        currentList,
     } = props;
 
-    // let renderSearchList;
-    // if (searchList) {
-    //     renderSearchList = searchList.map((profile, index) => {
-    //         return <ProfileCard key={index} profile={profile} type={'allUsersList'}/>;
-    //     });
-    // }
-    // useEffect(() => {
-    //     dispatch(getProfilesAction(GET_ALL_USERS))
-    // }, [])
+
+    useEffect(() => {
+
+        console.log("in the use effect");
+        dispatch(getProfilesAction(GET_ALL_USERS))
+    }, [])
 
     let renderAllUsersList;
     if (allUsersList) {
         renderAllUsersList = allUsersList.map((profile, index) => {
-            return <ProfileCard key={index} profile={profile} type={'allUsersList'}/>;
+            if (profile.id !== id) {
+                return <ProfileCard key={index} profile={profile} type={'allUsersList'}/>;
+            }
         });
     }
 
-    // const handleRefresh = () => {
-    //     dispatch({
-    //         type: CLEAR_LIST,
-    //     });
-    //     dispatch(getRandomProfiles(token));
-    // };
 
     return (
-        <>
-            {/*<RefreshButton onClick={handleRefresh}>REFRESH</RefreshButton>*/}
-            <ProfilesContainer>
-                {allUsersList ? renderAllUsersList : <PurpleSpinner/>}
-            </ProfilesContainer>
-        </>
+        <ProfilesContainer>
+            {allUsersList ? renderAllUsersList : <PurpleSpinner/>}
+        </ProfilesContainer>
     );
 };
 
 const mapStateToProps = (state) => {
+    console.log("state", state);
     return {
-        authReducer: state.authReducer,
+
         searchReducer: state.searchReducer,
         userReducer: state.userReducer,
-        registration: state.registrationReducer,
-        postReducer: state.postReducer,
         profileReducer: state.profileReducer,
     };
 };

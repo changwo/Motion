@@ -65,6 +65,15 @@ export const friendRequestProfileAction = (userID) => async (dispatch) => {
         console.log("error", error.data)
     }
 }
+export const AcceptOrRejectRequestProfileAction = (requesterID, status) => async (dispatch) => {
+    try {
+        const response = await Axios.patch(`/social/friends/requests/${requesterID}/`, status)
+        dispatch(setUserProfile(response.data.receiver))
+        return response
+    } catch (error) {
+        console.log("error", error.data)
+    }
+}
 
 export const getUserProfilePostsAction = userID => async (dispatch) => {
 

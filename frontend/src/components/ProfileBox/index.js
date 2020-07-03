@@ -43,6 +43,14 @@ import {
     GET_MY_LIKED_POSTS,
     GET_MY_POSTS
 } from "../../store/types";
+import styled from "styled-components";
+
+const MultiP = styled.p`
+  white-space:pre-line;
+`
+const BoldP = styled.p`
+  font-weight: bold;
+`
 
 const ProfileBox = (props) => {
     const [moduleIndex, setModule] = useState(0);
@@ -131,19 +139,19 @@ const ProfileBox = (props) => {
                     <DefaultButton onClick={handleEdit}>EDIT PROFILE</DefaultButton>
                 </User>
                 <About>
-                    <p>About</p>
-                    <p>{about_me}</p>
+                    <BoldP>About</BoldP>
+                    <MultiP>{about_me}</MultiP>
                 </About>
                 <Things>
-                    <p>Things I like</p>
+                    <BoldP>Things I like</BoldP>
                     <ThingsLikedBox>{renderThingsLike}</ThingsLikedBox>
                 </Things>
                 <Email>
-                    <p>Email</p>
+                    <BoldP>Email</BoldP>
                     <p>{email}</p>
                 </Email>
                 <Phone>
-                    <p>Phone</p>
+                    <BoldP>Phone</BoldP>
                     <p>Phone Number</p>
                 </Phone>
                 <PostsButton active={moduleIndex === 0} onClick={handleGetPosts}>

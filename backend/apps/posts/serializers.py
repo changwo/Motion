@@ -1,8 +1,6 @@
 from django.contrib.auth import get_user_model
-from django.http import HttpResponseBadRequest
 from rest_framework import serializers
 
-from apps.authentication.models import get_or_none
 from apps.postimages.models import PostImage
 from apps.postimages.serializers import PostImageSerializer
 from apps.posts.models import Post

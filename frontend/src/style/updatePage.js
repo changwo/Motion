@@ -114,8 +114,10 @@ export const LocationDiv = styled(DefaultProfileDiv)`
 
 export const AboutDiv = styled(DefaultProfileDiv)`
   grid-area: about;
-  input {
+  textarea {
     width: 100%;
+    resize: none;
+    border: none;
   }
 `;
 

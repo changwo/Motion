@@ -36,6 +36,7 @@ export const Div = styled(DefaultDiv)`
   flex-wrap: wrap;
   p {
     padding: 1rem;
+    white-space: pre-line;
   }
 `;
 

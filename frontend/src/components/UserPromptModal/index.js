@@ -104,7 +104,8 @@ const UserPromptModal = (props) => {
                            type="file"/>
                 </UPMAttachImgDiv>
                 <UPMDisplayImgDiv>
-                    {postInfo.imageUrls ? postInfo.imageUrls.map((url, index) => <UPMDisplayImg key={index} src={url}/>) : null}
+                    {postInfo.imageUrls ? postInfo.imageUrls.map((url, index) => <UPMDisplayImg key={index}
+                                                                                                src={url}/>) : null}
                 </UPMDisplayImgDiv>
             </UPModalBox>
         </UserPromptModalContainer>

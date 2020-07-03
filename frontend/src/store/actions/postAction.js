@@ -7,7 +7,6 @@ import {
     GET_MY_FRIENDS_POSTS, LIKE_POST, ADD_POST_TO_LIST, UPDATE_POST_IN_LIST,
 } from "../types";
 
-import axios from "axios";
 import Axios from "../../axios";
 import {resetError, setError} from "./userAction";
 
@@ -55,10 +54,11 @@ export const addPostToList = (post) => {
 }
 
 export const createPostAction = data => async (dispatch, getState) => {
+    console.log("form data:  ", [...data]);
 
     try {
 
-        const response = await Axios.post('/social/posts/', data,);
+        const response = await Axios.post('/social/posts/', data);
         console.log("response", response.data)
         dispatch(addPostToList(response.data))
         dispatch(resetError('createPostError'))
@@ -79,7 +79,7 @@ export const updatePostInList = (post) => {
 }
 
 export const updatePostAction = (data, postID) => async (dispatch) => {
-    console.log("Edit Data:  ",{...data});
+    console.log("Edit Data:  ", {...data});
     try {
         const response = await Axios.patch(`social/posts/${postID}/`, data);
         console.log("In the update post, response data", response.data)
@@ -143,3 +143,36 @@ export const likePostAction = (postID, postTypeCode) => async (dispatch, getStat
         console.error('catch in likePostAction:', error.data)
     }
 }
+
+export const getCommentsAction = postID => async (dispatch) => {
+    try {
+        const response = await Axios.get(`social/comments/${postID}/`);
+        return response
+    } catch (error) {
+        console.log(`error`, error);
+        return error
+    }
+}
+
+export const createCommentAction = (postID, data) => async (dispatch) => {
+    try {
+        const response = await Axios.post(`social/comments/${postID}/`, data);
+        console.log("comment data:", response.data)
+        return response
+    } catch (error) {
+        console.log(`error`, error);
+        return error
+    }
+}
+
+export const deleteCommentAction = commentID => async (dispatch) => {
+    try {
+        const response = await Axios.delete(`social/comments/comment/${commentID}/`);
+        console.log("comment has been deleted! ", response)
+        return response
+    } catch (error) {
+        console.log(`error`, error);
+        return error
+    }
+}
+

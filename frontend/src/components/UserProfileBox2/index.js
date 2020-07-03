@@ -43,7 +43,6 @@ const BoldP = styled.p`
 
 
 const UserProfileBox = (props) => {
-
     const {
         dispatch,
         userProfileReducer: {
@@ -117,11 +116,6 @@ const UserProfileBox = (props) => {
                         {first_name} {last_name}
                     </h1>
                     <h2>{location ? location : "Adress..."}</h2>
-                    {logged_in_user_is_following ? (
-                        <ThemedButton onClick={handleFollow}>✓ FOLLOWING</ThemedButton>
-                    ) : (
-                        <WhiteButton onClick={handleFollow}>FOLLOW</WhiteButton>
-                    )}
                     {FriendRequestButton()}
                 </User>
                 <About>

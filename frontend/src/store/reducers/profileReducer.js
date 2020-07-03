@@ -12,7 +12,7 @@ export const profileReducer = (state = initialState, action) => {
 
     switch (action.type) {
         case GET_ALL_USERS: {
-            return {...newState, followingList: action.payload};
+            return {...newState, allUsersList: action.payload};
         }
         case GET_FOLLOWING: {
             return {...newState, followingList: action.payload};

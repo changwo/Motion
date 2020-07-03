@@ -8,6 +8,7 @@ import {
 import Axios from "../../axios";
 
 
+
 export const getProfiles = (array, typeProperty) => {
     return {
         type: typeProperty,
@@ -30,6 +31,7 @@ export const getProfilesAction = typeProperty => async (dispatch) => {
     try {
         const response = await Axios.get(path);
         dispatch(getProfiles(response.data, typeProperty));
+        console.log("profiles list", response.data);
     } catch (error) {
         console.log(`${typeProperty} error`, error, error.data);
     }
@@ -58,6 +60,16 @@ export const friendRequestAction = (userID, type) => async (dispatch) => {
     try {
         const response = await Axios.post(`/social/friends/request/${userID}/`)
         console.log("friend request receiver info", response.data.receiver)
+        dispatch(updateProfile(response.data.receiver, type))
+        return response
+    } catch (error) {
+        console.log("error", error.data)
+    }
+}
+
+export const AcceptOrRejectRequestAction = (requesterID, status, type) => async (dispatch) => {
+    try {
+        const response = await Axios.patch(`/social/friends/requests/${requesterID}/`, status)
         dispatch(updateProfile(response.data.receiver, type))
         return response
     } catch (error) {

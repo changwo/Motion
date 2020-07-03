@@ -14,15 +14,12 @@ import {
 } from "../../style/postsFeed";
 import UserPrompt from "../UserPrompt";
 import UserPost from "../UserPost";
-import NonUserPost from "../NonUserPost";
 import PurpleSpinner from "../../spinners";
 import {GET_FOLLOWING_POSTS, GET_MY_FRIENDS_POSTS, GET_MY_LIKED_POSTS, GET_MY_POSTS} from "../../store/types";
 
 const PostsFeed = (props) => {
     const {
-        authReducer: {token},
         userReducer: {first_name, last_name, avatar},
-
         postReducer: {
             userPosts,
             friendPosts,
@@ -60,7 +57,7 @@ const PostsFeed = (props) => {
     let renderRight;
     if (arrayOfPostTypes[indexOfPostTypes]) {
         renderRight = arrayOfPostTypes[indexOfPostTypes].map((post, index) => {
-            return <NonUserPost token={token} post={post} key={index} postTypeCode={indexOfPostTypes}/>; // postTypeCode=0(likedPosts ), postTypeCode=1(friendsPosts ), postTypeCode=2(followingPosts )
+            return <UserPost post={post} key={index} postTypeCode={indexOfPostTypes}/>; // postTypeCode=0(likedPosts ), postTypeCode=1(friendsPosts ), postTypeCode=2(followingPosts )
         });
     }
 
@@ -80,7 +77,7 @@ const PostsFeed = (props) => {
                         last_name={last_name}
                         avatar={avatar}
                         handleCloseModal={props.handleCloseModal}
-                    ></UserPrompt>) : null}
+                    />) : null}
                     {userPosts ? (
                         renderMyPosts
                     ) : (
@@ -101,9 +98,7 @@ const PostsFeed = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        authReducer: state.authReducer,
         userReducer: state.userReducer,
-        registration: state.registrationReducer,
         postReducer: state.postReducer,
     };
 };

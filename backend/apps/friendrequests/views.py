@@ -31,12 +31,10 @@ class ListAllFriendRequestsView(ListAPIView):
 class CreateFriendRequestView(CreateAPIView):
     """
 
-
     -----------------------------------------------------------------------------------------------------------------
     Create a friend request by placing the user_id of the target user you wish to send a friend request to in the URL
     The request body can be empty.
     -----------------------------------------------------------------------------------------------------------------
-
 
     """
     lookup_url_kwarg = 'user_id'
@@ -66,31 +64,34 @@ class CreateFriendRequestView(CreateAPIView):
 
 class AcceptOrRejectFriendRequestView(RetrieveUpdateDestroyAPIView):
     """
-
     -----------------------------------------------------------------------------------------------------------------
     Method Patch:
     Create a friend request by placing the user_id of the target user you wish to send a friend request to in the URL
     The request body can be empty.
     -----------------------------------------------------------------------------------------------------------------
 
-
     """
-    lookup_url_kwarg = 'friend_request_id'
+    lookup_url_kwarg = 'requester_id'
     serializer_class = FriendRequestSerializer
     queryset = FriendRequest
-    permission_classes = [IsReceiverOrRequesterOrAdmin]
+    # permission_classes = [IsReceiverOrRequesterOrAdmin]
+    http_method_names = ['get', 'patch', 'delete']
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
-        target_friend_request = self.get_object()
-        serializer = self.get_serializer(target_friend_request, data=request.data, partial=partial)
+        users_received_requests = request.user.received.all()
+        target_request = []
+        for request_instance in users_received_requests:
+            if request_instance.requester.id == kwargs['requester_id']:
+                target_request.append(request_instance)
+        serializer = self.get_serializer(target_request[0], data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-        if target_friend_request.status == 'A':
+        if target_request[0].status == 'A':
             email = EmailMessage()
-            email.subject = f'{target_friend_request.receiver.first_name} accepted your friend request!'
-            email.body = f'Hey {target_friend_request.requester.first_name},\n{target_friend_request.receiver.first_name} {target_friend_request.receiver.last_name} accepted you friend request, login and say hi!  '
-            email.to = [target_friend_request.requester.email]
+            email.subject = f'{target_request[0].receiver.first_name} accepted your friend request!'
+            email.body = f'Hey {target_request[0].requester.first_name},\n{target_request[0].receiver.first_name} {target_request[0].receiver.last_name} accepted you friend request, login and say hi!  '
+            email.to = [target_request[0].requester.email]
             email.send(fail_silently=False)
         return Response(serializer.data)
 
