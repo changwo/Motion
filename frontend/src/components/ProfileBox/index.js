@@ -67,7 +67,6 @@ const ProfileBox = (props) => {
             first_name,
             last_name,
             location,
-            id,
             things_user_likes,
         },
     } = props;
@@ -191,7 +190,7 @@ const ProfileBox = (props) => {
 };
 
 const mapStateToProps = (state) => {
-    console.log("state ", state)
+
     return {
         authReducer: state.authReducer,
         userReducer: state.userReducer,

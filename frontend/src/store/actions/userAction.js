@@ -27,7 +27,7 @@ export const resetError = (errorType) => {
 
 export const updateUserAction = data => async (dispatch) => {
     try {
-        console.log("in the patch data:", data)
+        console.log("in the patch data:", [...data])
         const response = await Axios.patch(`users/me/`, data)
         console.log("in the patch:", response.data)
         dispatch(setLoggedInUser(response.data))

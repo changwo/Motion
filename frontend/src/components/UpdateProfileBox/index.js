@@ -102,7 +102,7 @@ const UpdateProfileBox = (props) => {
         form.append('about_me', userInfo.about_me)
         if (userInfo.things_user_likes.length) {
             userInfo.things_user_likes.split(",").forEach((el, ind) => {
-                form.append(`things_user_likes[${ind}]`, el)
+                form.append(`things_user_likes`, el)
             })
         }
         if (userInfo.avatar) {
